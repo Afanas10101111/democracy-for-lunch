@@ -1,0 +1,25 @@
+package com.github.afanas10101111.dfl;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class MatcherFactory {
+    public static <T> Matcher<T> createWithFieldsToIgnore(String... fieldsToIgnore) {
+        return new Matcher<>(fieldsToIgnore);
+    }
+
+    public static class Matcher<T> {
+        private final String[] fieldsToIgnore;
+
+        private Matcher(String... fieldsToIgnore) {
+            this.fieldsToIgnore = fieldsToIgnore;
+        }
+
+        public void assertMatch(T actual, T expected) {
+            assertThat(actual).usingRecursiveComparison().ignoringFields(fieldsToIgnore).isEqualTo(expected);
+        }
+
+        public void assertMatch(Iterable<T> actual, Iterable<T> expected) {
+            assertThat(actual).usingRecursiveFieldByFieldElementComparatorIgnoringFields(fieldsToIgnore).isEqualTo(expected);
+        }
+    }
+}
