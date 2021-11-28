@@ -1,18 +1,12 @@
 package com.github.afanas10101111.dfl.service;
 
-import com.github.afanas10101111.dfl.config.DataJpaConfig;
-import com.github.afanas10101111.dfl.config.ServiceConfig;
 import com.github.afanas10101111.dfl.exception.NotFoundException;
 import com.github.afanas10101111.dfl.model.User;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlConfig;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import static com.github.afanas10101111.dfl.UserTestUtil.ADMIN_ID;
+import static com.github.afanas10101111.dfl.UserTestUtil.NA_EMAIL;
 import static com.github.afanas10101111.dfl.UserTestUtil.NA_ID;
 import static com.github.afanas10101111.dfl.UserTestUtil.USER_MATCHER;
 import static com.github.afanas10101111.dfl.UserTestUtil.admin;
@@ -22,21 +16,18 @@ import static com.github.afanas10101111.dfl.UserTestUtil.getUpdated;
 import static com.github.afanas10101111.dfl.UserTestUtil.user;
 import static org.junit.Assert.assertThrows;
 
-@RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {DataJpaConfig.class, ServiceConfig.class})
-@Sql(scripts = "classpath:db/populate.sql", config = @SqlConfig(encoding = "UTF-8"))
-public class UserServiceTest {
+public class UserServiceTest extends BaseServiceTestClass {
 
     @Autowired
     private UserService service;
 
     @Test
     public void create() {
-        User saved = service.create(getNew());
-        long id = saved.id();
+        User created = service.create(getNew());
+        long id = created.id();
         User expected = getNew();
         expected.setId(id);
-        USER_MATCHER.assertMatch(saved, expected);
+        USER_MATCHER.assertMatch(created, expected);
         USER_MATCHER.assertMatch(service.get(id), expected);
     }
 
@@ -68,7 +59,7 @@ public class UserServiceTest {
     @Test
     public void getByEmail() {
         USER_MATCHER.assertMatch(service.getByEmail(user.getEmail()), user);
-        assertThrows(NotFoundException.class, () -> service.getByEmail("someEmail"));
+        assertThrows(NotFoundException.class, () -> service.getByEmail(NA_EMAIL));
     }
 
     @Test

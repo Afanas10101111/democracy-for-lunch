@@ -13,6 +13,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
@@ -24,7 +25,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString(callSuper = true)
+@ToString(callSuper = true, exclude = "meals")
 @Entity
 @Table(
         name = "restaurants",
@@ -39,6 +40,7 @@ public class Restaurant extends NamedEntity {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @OrderBy("name")
     private Set<Meal> meals;
 
     public Restaurant(String name, String address, Collection<Meal> meals) {
@@ -50,5 +52,15 @@ public class Restaurant extends NamedEntity {
     public void setMeals(Collection<Meal> meals) {
         this.meals = CollectionUtils.isEmpty(meals) ? Collections.emptySet() : Set.copyOf(meals);
         this.meals.forEach(m -> m.setRestaurant(this));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }

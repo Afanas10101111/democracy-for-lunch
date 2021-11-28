@@ -12,6 +12,7 @@ public class UserTestUtil {
     public static final long ADMIN_ID = 100000;
     public static final long USER_ID = 100001;
     public static final long NA_ID = 0;
+    public static final String NA_EMAIL = "someEmail@email.me";
 
     public static final User admin = new User("Admin", "admin@gmail.com", "admin", true, Set.of(Role.USER, Role.ADMIN));
     public static final User user = new User("User", "user@yandex.ru", "password", true, Set.of(Role.USER));

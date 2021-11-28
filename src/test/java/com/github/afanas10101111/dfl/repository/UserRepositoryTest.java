@@ -1,15 +1,10 @@
 package com.github.afanas10101111.dfl.repository;
 
-import com.github.afanas10101111.dfl.config.DataJpaConfig;
+import com.github.afanas10101111.dfl.BaseTestClass;
 import com.github.afanas10101111.dfl.model.User;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlConfig;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import static com.github.afanas10101111.dfl.UserTestUtil.NA_ID;
 import static com.github.afanas10101111.dfl.UserTestUtil.USER_ID;
@@ -23,10 +18,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(SpringRunner.class)
-@ContextConfiguration(classes = DataJpaConfig.class)
-@Sql(scripts = "classpath:db/populate.sql", config = @SqlConfig(encoding = "UTF-8"))
-public class UserRepositoryTest {
+public class UserRepositoryTest extends BaseTestClass {
 
     @Autowired
     private UserRepository repository;

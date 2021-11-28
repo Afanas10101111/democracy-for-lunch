@@ -6,7 +6,6 @@ import com.github.afanas10101111.dfl.model.Restaurant;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
-import java.util.Set;
 
 public class RestaurantTestUtil {
     public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_MATCHER = MatcherFactory.createWithFieldsToIgnore("meals");
@@ -38,10 +37,10 @@ public class RestaurantTestUtil {
     public static final Meal bigBasket = new Meal("big basket", 190.00);
     public static final Meal megaSandwich = new Meal("mega sandwich", 100.00);
 
-    public static final Restaurant mcDonalds = new Restaurant("McDonalds", "Moscow", Set.of(bigMak, cheeseburger, hamburger));
-    public static final Restaurant burgerKing = new Restaurant("BurgerKing", "Moscow", Set.of(kingBurger, kingBurgerRoyal));
-    public static final Restaurant kfc = new Restaurant("KFC", "Moscow", Set.of(bigBasket, sundersWings));
-    public static final Restaurant subWay = new Restaurant("SubWay", "Moscow", Set.of(megaSandwich));
+    public static final Restaurant mcDonalds = new Restaurant("McDonalds", "Moscow", List.of(bigMak, cheeseburger, hamburger));
+    public static final Restaurant burgerKing = new Restaurant("BurgerKing", "Moscow", List.of(kingBurger, kingBurgerRoyal));
+    public static final Restaurant kfc = new Restaurant("KFC", "Moscow", List.of(bigBasket, sundersWings));
+    public static final Restaurant subWay = new Restaurant("SubWay", "Moscow", List.of(megaSandwich));
 
     public static final List<Restaurant> all = List.of(burgerKing, kfc, mcDonalds, subWay);
 
@@ -62,11 +61,11 @@ public class RestaurantTestUtil {
     }
 
     public static Restaurant getNew() {
-        return new Restaurant("New", "Neq York", Set.of(new Meal(hamburger.getName(), hamburger.getPrice())));
+        return new Restaurant("New", "Neq York", List.of(new Meal(hamburger.getName(), hamburger.getPrice())));
     }
 
     public static Restaurant getUpdated() {
-        Restaurant updated = new Restaurant("MAC", "Washington DC", Set.of(hamburger, cheeseburger));
+        Restaurant updated = new Restaurant("MAC", "Washington DC", List.of(hamburger, cheeseburger));
         updated.setId(MC_DONALDS_ID);
         return updated;
     }
