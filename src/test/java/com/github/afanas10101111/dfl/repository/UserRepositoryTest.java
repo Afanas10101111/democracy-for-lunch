@@ -2,7 +2,7 @@ package com.github.afanas10101111.dfl.repository;
 
 import com.github.afanas10101111.dfl.BaseTestClass;
 import com.github.afanas10101111.dfl.model.User;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 
@@ -13,18 +13,18 @@ import static com.github.afanas10101111.dfl.UserTestUtil.all;
 import static com.github.afanas10101111.dfl.UserTestUtil.getNew;
 import static com.github.afanas10101111.dfl.UserTestUtil.getUpdated;
 import static com.github.afanas10101111.dfl.UserTestUtil.user;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class UserRepositoryTest extends BaseTestClass {
+class UserRepositoryTest extends BaseTestClass {
 
     @Autowired
     private UserRepository repository;
 
     @Test
-    public void save() {
+    void save() {
         User saved = repository.save(getNew());
         long savedId = saved.id();
         User expectedSaved = getNew();
@@ -40,7 +40,7 @@ public class UserRepositoryTest extends BaseTestClass {
     }
 
     @Test
-    public void saveConstraintViolation() {
+    void saveConstraintViolation() {
         User aNew = getNew();
         aNew.setEmail(user.getEmail());
         assertThrows(DataIntegrityViolationException.class, () -> repository.save(aNew));
@@ -52,29 +52,29 @@ public class UserRepositoryTest extends BaseTestClass {
     }
 
     @Test
-    public void delete() {
+    void delete() {
         assertTrue(repository.delete(USER_ID));
         assertNull(repository.get(USER_ID));
         assertFalse(repository.delete(USER_ID));
     }
 
     @Test
-    public void get() {
+    void get() {
         USER_MATCHER.assertMatch(repository.get(USER_ID), user);
     }
 
     @Test
-    public void getNotExisted() {
+    void getNotExisted() {
         assertNull(repository.get(NA_ID));
     }
 
     @Test
-    public void getByEmail() {
+    void getByEmail() {
         USER_MATCHER.assertMatch(repository.getByEmail(user.getEmail()), user);
     }
 
     @Test
-    public void getAll() {
+    void getAll() {
         USER_MATCHER.assertMatch(repository.getAll(), all);
     }
 }

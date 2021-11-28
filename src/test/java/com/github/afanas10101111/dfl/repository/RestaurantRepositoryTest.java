@@ -3,7 +3,7 @@ package com.github.afanas10101111.dfl.repository;
 import com.github.afanas10101111.dfl.BaseTestClass;
 import com.github.afanas10101111.dfl.model.Meal;
 import com.github.afanas10101111.dfl.model.Restaurant;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 
@@ -20,18 +20,18 @@ import static com.github.afanas10101111.dfl.RestaurantTestUtil.getNew;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.getUpdated;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.hamburger;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.mcDonalds;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class RestaurantRepositoryTest extends BaseTestClass {
+class RestaurantRepositoryTest extends BaseTestClass {
 
     @Autowired
     private RestaurantRepositoryImpl repository;
 
     @Test
-    public void save() {
+    void save() {
         Restaurant saved = repository.save(getNew());
         long savedId = saved.id();
         Restaurant expectedSaved = getNew();
@@ -41,14 +41,13 @@ public class RestaurantRepositoryTest extends BaseTestClass {
         RESTAURANT_WITH_MEALS_MATCHER.assertMatch(repository.getWithMealsByDate(savedId, LocalDate.now()), expectedSaved);
 
         Restaurant updatedFromDb = repository.save(getUpdated());
-        long updatedId = updatedFromDb.id();
         Restaurant expectedUpdated = getUpdated();
-        RESTAURANT_MATCHER.assertMatch(updatedFromDb, expectedUpdated);
-        RESTAURANT_MATCHER.assertMatch(repository.getWithMealsByDate(updatedId, LocalDate.now()), expectedUpdated);
+        RESTAURANT_WITH_MEALS_MATCHER.assertMatch(updatedFromDb, expectedUpdated);
+        RESTAURANT_WITH_MEALS_MATCHER.assertMatch(repository.getWithMealsByDate(updatedFromDb.id(), LocalDate.now()), expectedUpdated);
     }
 
     @Test
-    public void saveConstraintViolation() {
+    void saveConstraintViolation() {
         Restaurant doubleRestaurant = getNew();
         doubleRestaurant.setName(mcDonalds.getName());
         doubleRestaurant.setAddress(mcDonalds.getAddress());
@@ -63,34 +62,34 @@ public class RestaurantRepositoryTest extends BaseTestClass {
     }
 
     @Test
-    public void delete() {
+    void delete() {
         assertTrue(repository.delete(MC_DONALDS_ID));
         assertNull(repository.get(MC_DONALDS_ID));
         assertFalse(repository.delete(MC_DONALDS_ID));
     }
 
     @Test
-    public void get() {
+    void get() {
         RESTAURANT_MATCHER.assertMatch(repository.get(MC_DONALDS_ID), mcDonalds);
     }
 
     @Test
-    public void getNa() {
+    void getNa() {
         assertNull(repository.get(NA_ID));
     }
 
     @Test
-    public void getWithMealsByDate() {
+    void getWithMealsByDate() {
         RESTAURANT_WITH_MEALS_MATCHER.assertMatch(repository.getWithMealsByDate(MC_DONALDS_ID, DATE_OF_MEALS_INIT), mcDonalds);
     }
 
     @Test
-    public void getWithOutOfDateMeals() {
+    void getWithOutOfDateMeals() {
         assertNull(repository.getWithMealsByDate(MC_DONALDS_ID, LocalDate.now()));
     }
 
     @Test
-    public void getAll() {
+    void getAll() {
         RESTAURANT_MATCHER.assertMatch(repository.getAll(), all);
     }
 }
