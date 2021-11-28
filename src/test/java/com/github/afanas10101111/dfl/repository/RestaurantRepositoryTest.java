@@ -15,7 +15,6 @@ import java.time.LocalDate;
 
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.DATE_OF_MEALS_INIT;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.MC_DONALDS_ID;
-import static com.github.afanas10101111.dfl.RestaurantTestUtil.NA_ID;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.RESTAURANT_MATCHER;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.RESTAURANT_WITH_MEALS_MATCHER;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.all;
@@ -38,24 +37,18 @@ public class RestaurantRepositoryTest {
     @Test
     public void save() {
         Restaurant saved = repository.save(getNew());
-        Long savedId = saved.getId();
-        Restaurant aNew = getNew();
-        aNew.setId(savedId);
-        aNew.setMeals(saved.getMeals());
-        RESTAURANT_WITH_MEALS_MATCHER.assertMatch(saved, aNew);
-        RESTAURANT_WITH_MEALS_MATCHER.assertMatch(repository.getWithMealsByDate(
-                savedId == null ? NA_ID : savedId,
-                LocalDate.now()
-        ), aNew);
+        long savedId = saved.id();
+        Restaurant expectedSaved = getNew();
+        expectedSaved.setId(savedId);
+        expectedSaved.setMeals(saved.getMeals());
+        RESTAURANT_WITH_MEALS_MATCHER.assertMatch(saved, expectedSaved);
+        RESTAURANT_WITH_MEALS_MATCHER.assertMatch(repository.getWithMealsByDate(savedId, LocalDate.now()), expectedSaved);
 
         Restaurant updatedFromDb = repository.save(getUpdated());
-        Long updatedId = updatedFromDb.getId();
-        Restaurant updated = getUpdated();
-        RESTAURANT_MATCHER.assertMatch(updatedFromDb, updated);
-        RESTAURANT_MATCHER.assertMatch(repository.getWithMealsByDate(
-                updatedId == null ? NA_ID : updatedId,
-                LocalDate.now()
-        ), updated);
+        long updatedId = updatedFromDb.id();
+        Restaurant expectedUpdated = getUpdated();
+        RESTAURANT_MATCHER.assertMatch(updatedFromDb, expectedUpdated);
+        RESTAURANT_MATCHER.assertMatch(repository.getWithMealsByDate(updatedId, LocalDate.now()), expectedUpdated);
     }
 
     @Test

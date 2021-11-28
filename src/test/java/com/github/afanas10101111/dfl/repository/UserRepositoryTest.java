@@ -34,17 +34,17 @@ public class UserRepositoryTest {
     @Test
     public void save() {
         User saved = repository.save(getNew());
-        Long savedId = saved.getId();
-        User aNew = getNew();
-        aNew.setId(savedId);
-        USER_MATCHER.assertMatch(saved, aNew);
-        USER_MATCHER.assertMatch(repository.get(savedId == null ? NA_ID : savedId), aNew);
+        long savedId = saved.id();
+        User expectedSaved = getNew();
+        expectedSaved.setId(savedId);
+        USER_MATCHER.assertMatch(saved, expectedSaved);
+        USER_MATCHER.assertMatch(repository.get(savedId), expectedSaved);
 
         User updatedFromDb = repository.save(getUpdated());
-        Long updatedId = updatedFromDb.getId();
-        User updated = getUpdated();
-        USER_MATCHER.assertMatch(updatedFromDb, updated);
-        USER_MATCHER.assertMatch(repository.get(updatedId == null ? NA_ID : updatedId), updated);
+        long updatedId = updatedFromDb.id();
+        User expectedUpdated = getUpdated();
+        USER_MATCHER.assertMatch(updatedFromDb, expectedUpdated);
+        USER_MATCHER.assertMatch(repository.get(updatedId), expectedUpdated);
     }
 
     @Test
@@ -52,6 +52,11 @@ public class UserRepositoryTest {
         User aNew = getNew();
         aNew.setEmail(user.getEmail());
         assertThrows(DataIntegrityViolationException.class, () -> repository.save(aNew));
+
+        // TODO handle case with update
+        /*User na = getUpdated();
+        na.setId(NA_ID);
+        assertThrows(DataIntegrityViolationException.class, () -> repository.save(na));*/
     }
 
     @Test

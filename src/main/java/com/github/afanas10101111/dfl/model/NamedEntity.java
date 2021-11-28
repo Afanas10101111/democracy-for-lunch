@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Persistable;
+import org.springframework.util.Assert;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -39,5 +41,27 @@ public abstract class NamedEntity implements Persistable<Long> {
     @Override
     public boolean isNew() {
         return id == null;
+    }
+
+    public long id() {
+        Assert.notNull(id, "Entity must have id");
+        return id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || !getClass().equals(Hibernate.getClass(o))) {
+            return false;
+        }
+        NamedEntity that = (NamedEntity) o;
+        return id != null && id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id == null ? 0 : id.intValue();
     }
 }
