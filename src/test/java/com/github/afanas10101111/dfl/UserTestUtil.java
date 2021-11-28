@@ -3,8 +3,11 @@ package com.github.afanas10101111.dfl;
 import com.github.afanas10101111.dfl.model.Role;
 import com.github.afanas10101111.dfl.model.User;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
+
+import static com.github.afanas10101111.dfl.RestaurantTestUtil.MC_DONALDS_ID;
 
 public class UserTestUtil {
     public static final MatcherFactory.Matcher<User> USER_MATCHER = MatcherFactory.createWithFieldsToIgnore("registered");
@@ -32,5 +35,19 @@ public class UserTestUtil {
         User updated = new User("Updated", "up@up.up", "4321", false, Set.of(Role.USER, Role.ADMIN));
         updated.setId(USER_ID);
         return updated;
+    }
+
+    public static User getVotedUser() {
+        User user = new User(
+                UserTestUtil.user.getName(),
+                UserTestUtil.user.getEmail(),
+                UserTestUtil.user.getPassword(),
+                UserTestUtil.user.isEnabled(),
+                UserTestUtil.user.getRoles()
+        );
+        user.setId(USER_ID);
+        user.setVoteDate(LocalDate.now());
+        user.setVotedForId(MC_DONALDS_ID);
+        return user;
     }
 }
