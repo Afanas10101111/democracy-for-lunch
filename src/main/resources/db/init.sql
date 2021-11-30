@@ -32,6 +32,7 @@ CREATE TABLE restaurants
     id      BIGINT PRIMARY KEY DEFAULT nextval('global_seq'),
     name    VARCHAR NOT NULL,
     address VARCHAR NOT NULL,
+    voices  INTEGER NOT NULL,
     CONSTRAINT restaurants_unique_name_address_idx UNIQUE (name, address)
 );
 

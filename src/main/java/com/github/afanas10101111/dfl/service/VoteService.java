@@ -1,14 +1,17 @@
 package com.github.afanas10101111.dfl.service;
 
 import com.github.afanas10101111.dfl.exception.TooLateToVoteException;
+import com.github.afanas10101111.dfl.model.Restaurant;
 import com.github.afanas10101111.dfl.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @Service
@@ -18,17 +21,30 @@ public class VoteService {
     private final RestaurantService restaurantService;
     private final Clock clock;
 
+    @Transactional
     public void vote(long userId, long restaurantId) {
         LocalDateTime now = LocalDateTime.now(clock);
-        LocalDate date = now.toLocalDate();
+        LocalDate nowDate = now.toLocalDate();
+
         User user = userService.get(userId);
-        LocalDate voteDate = user.getVoteDate();
-        if (voteDate != null && voteDate.isEqual(date) && now.toLocalTime().isAfter(REVOTE_CLOSING_TIME)) {
+        boolean votedToday = Objects.equals(user.getVoteDate(), nowDate);
+        boolean sameChoice = Objects.equals(user.getVotedForId(), restaurantId);
+        if (votedToday && now.toLocalTime().isAfter(REVOTE_CLOSING_TIME)) {
             throw new TooLateToVoteException();
+        } else if (votedToday && sameChoice) {
+            return;
         }
-        // TODO think about storing voices in the restaurant
-        restaurantService.get(restaurantId);
-        user.setVoteDate(date);
+
+        Restaurant restaurant = restaurantService.get(restaurantId);
+        if (!sameChoice && votedToday) {
+            Restaurant previousChoice = restaurantService.get(user.getVotedForId());
+            previousChoice.removeVoice();
+            restaurantService.update(previousChoice);
+        }
+        restaurant.addVoice();
+        restaurantService.update(restaurant);
+
+        user.setVoteDate(nowDate);
         user.setVotedForId(restaurantId);
         userService.update(user);
     }

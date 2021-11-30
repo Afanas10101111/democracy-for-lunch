@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.CascadeType;
@@ -38,6 +39,10 @@ public class Restaurant extends NamedEntity {
     @Size(min = 5, max = 100)
     private String address;
 
+    @Column(name = "voices", nullable = false)
+    @Range(max = 2000000000)
+    private int voices;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @OrderBy("name")
@@ -47,6 +52,14 @@ public class Restaurant extends NamedEntity {
         super(null, name);
         this.address = address;
         setMeals(meals);
+    }
+
+    public void addVoice() {
+        voices++;
+    }
+
+    public void removeVoice() {
+        voices--;
     }
 
     public void setMeals(Collection<Meal> meals) {

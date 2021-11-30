@@ -10,7 +10,7 @@ public class RestaurantTestUtil {
     public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_MATCHER = MatcherFactory.createWithFieldsToIgnore("meals");
     public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_WITH_MEALS_MATCHER = MatcherFactory.createWithFieldsToIgnore("meals.date", "meals.restaurant");
 
-    public static final LocalDate DATE_OF_MEALS_INIT = LocalDate.now();
+    public static final LocalDate NOW = LocalDate.now();
 
     public static final long MC_DONALDS_ID = 100002;
     public static final long BURGER_KING_ID = 100003;

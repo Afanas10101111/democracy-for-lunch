@@ -10,7 +10,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.github.afanas10101111.dfl.RestaurantTestUtil.DATE_OF_MEALS_INIT;
+import static com.github.afanas10101111.dfl.RestaurantTestUtil.NOW;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.MC_DONALDS_ID;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.NA_ID;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.RESTAURANT_MATCHER;
@@ -81,12 +81,12 @@ class RestaurantRepositoryTest extends BaseTestClass {
 
     @Test
     void getWithMealsByDate() {
-        RESTAURANT_WITH_MEALS_MATCHER.assertMatch(repository.getWithMealsByDate(MC_DONALDS_ID, DATE_OF_MEALS_INIT), mcDonalds);
+        RESTAURANT_WITH_MEALS_MATCHER.assertMatch(repository.getWithMealsByDate(MC_DONALDS_ID, NOW), mcDonalds);
     }
 
     @Test
     void getWithOutOfDateMeals() {
-        assertNull(repository.getWithMealsByDate(MC_DONALDS_ID, DATE_OF_MEALS_INIT.minusDays(1)));
+        assertNull(repository.getWithMealsByDate(MC_DONALDS_ID, NOW.minusDays(1)));
     }
 
     @Test
@@ -96,11 +96,11 @@ class RestaurantRepositoryTest extends BaseTestClass {
 
     @Test
     void getAllUpToDate() {
-        RESTAURANT_MATCHER.assertMatch(repository.getAllUpToDate(DATE_OF_MEALS_INIT), allWithActualMenu);
+        RESTAURANT_MATCHER.assertMatch(repository.getAllUpToDate(NOW), allWithActualMenu);
     }
 
     @Test
     void getAllWithMealsByDate() {
-        RESTAURANT_WITH_MEALS_MATCHER.assertMatch(repository.getAllWithMealsByDate(DATE_OF_MEALS_INIT), allWithActualMenu);
+        RESTAURANT_WITH_MEALS_MATCHER.assertMatch(repository.getAllWithMealsByDate(NOW), allWithActualMenu);
     }
 }

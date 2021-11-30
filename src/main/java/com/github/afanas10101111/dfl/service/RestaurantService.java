@@ -22,6 +22,7 @@ public class RestaurantService {
         return repository.save(restaurant);
     }
 
+    // TODO need method for separate meal set/update with setting zero voices
     public void update(Restaurant restaurant) {
         Assert.notNull(restaurant, ASSERT_MESSAGE);
         get(restaurant.id());
