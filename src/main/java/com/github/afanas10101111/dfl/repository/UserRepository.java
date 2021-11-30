@@ -1,18 +1,36 @@
 package com.github.afanas10101111.dfl.repository;
 
-
 import com.github.afanas10101111.dfl.model.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface UserRepository {
-    User save(User user);
+@RequiredArgsConstructor
+@Repository
+public class UserRepository {
+    private static final Sort SORT_NAME_EMAIL = Sort.by(Sort.Direction.ASC, "name", "email");
 
-    boolean delete(long id);
+    private final DataJpaUserRepository repository;
 
-    User get(long id);
+    public User save(User user) {
+        return repository.save(user);
+    }
 
-    User getByEmail(String email);
+    public boolean delete(long id) {
+        return repository.delete(id) != 0;
+    }
 
-    List<User> getAll();
+    public User get(long id) {
+        return repository.findById(id).orElse(null);
+    }
+
+    public User getByEmail(String email) {
+        return repository.getByEmail(email);
+    }
+
+    public List<User> getAll() {
+        return repository.findAll(SORT_NAME_EMAIL);
+    }
 }

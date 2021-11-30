@@ -42,4 +42,12 @@ public class RestaurantService {
     public List<Restaurant> getAll() {
         return repository.getAll();
     }
+
+    public List<Restaurant> getAllUpToDate() {
+        return repository.getAllUpToDate(LocalDate.now());
+    }
+
+    public List<Restaurant> getAllWithMealsByDate() {
+        return repository.getAllWithMealsByDate(LocalDate.now());
+    }
 }

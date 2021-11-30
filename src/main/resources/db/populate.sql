@@ -19,12 +19,12 @@ VALUES ('McDonalds', 'Moscow'),
        ('KFC', 'Moscow'),
        ('SubWay', 'Moscow');
 
-INSERT INTO meals (restaurant_id, name, price, date)
-VALUES (100002, 'hamburger', 50.00, '2021-11-18'),
-       (100002, 'cheeseburger', 60.00, '2021-11-18'),
-       (100002, 'big mak', 160.00, '2021-11-18'),
-       (100003, 'king burger', 80.00, '2021-11-18'),
-       (100003, 'king burger royal', 180.00, '2021-11-18'),
-       (100004, 'sunders wings', 90.00, '2021-11-18'),
-       (100004, 'big basket', 190.00, '2021-11-18'),
-       (100005, 'mega sandwich', 100.00, '2021-11-18');
+INSERT INTO meals (restaurant_id, name, price, created)
+VALUES (100002, 'hamburger', 50.00, now()),
+       (100002, 'cheeseburger', 60.00, now()),
+       (100002, 'big mak', 160.00, now()),
+       (100003, 'king burger', 80.00, now()),
+       (100003, 'king burger royal', 180.00, now()),
+       (100004, 'sunders wings', 90.00, now()),
+       (100004, 'big basket', 190.00, now()),
+       (100005, 'mega sandwich', 100.00, '2020-12-21');

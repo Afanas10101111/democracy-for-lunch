@@ -4,14 +4,13 @@ import com.github.afanas10101111.dfl.model.Meal;
 import com.github.afanas10101111.dfl.model.Restaurant;
 
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.List;
 
 public class RestaurantTestUtil {
     public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_MATCHER = MatcherFactory.createWithFieldsToIgnore("meals");
     public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_WITH_MEALS_MATCHER = MatcherFactory.createWithFieldsToIgnore("meals.date", "meals.restaurant");
 
-    public static final LocalDate DATE_OF_MEALS_INIT = LocalDate.of(2021, Month.NOVEMBER, 18);
+    public static final LocalDate DATE_OF_MEALS_INIT = LocalDate.now();
 
     public static final long MC_DONALDS_ID = 100002;
     public static final long BURGER_KING_ID = 100003;
@@ -43,6 +42,7 @@ public class RestaurantTestUtil {
     public static final Restaurant subWay = new Restaurant("SubWay", "Moscow", List.of(megaSandwich));
 
     public static final List<Restaurant> all = List.of(burgerKing, kfc, mcDonalds, subWay);
+    public static final List<Restaurant> allWithActualMenu = List.of(burgerKing, kfc, mcDonalds);
 
     static {
         hamburger.setId(HAMBURGER_ID);
@@ -51,8 +51,8 @@ public class RestaurantTestUtil {
         kingBurger.setId(KING_BURGER_ID);
         kingBurgerRoyal.setId(KING_BURGER_ROYAL_ID);
         sundersWings.setId(SUNDERS_WINGS_ID);
-        megaSandwich.setId(BIG_BASKET_ID);
-        bigBasket.setId(MEGA_SANDWICH_ID);
+        bigBasket.setId(BIG_BASKET_ID);
+        megaSandwich.setId(MEGA_SANDWICH_ID);
 
         mcDonalds.setId(MC_DONALDS_ID);
         burgerKing.setId(BURGER_KING_ID);

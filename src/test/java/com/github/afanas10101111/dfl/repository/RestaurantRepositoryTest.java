@@ -16,6 +16,7 @@ import static com.github.afanas10101111.dfl.RestaurantTestUtil.NA_ID;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.RESTAURANT_MATCHER;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.RESTAURANT_WITH_MEALS_MATCHER;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.all;
+import static com.github.afanas10101111.dfl.RestaurantTestUtil.allWithActualMenu;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.getNew;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.getUpdated;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.hamburger;
@@ -28,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class RestaurantRepositoryTest extends BaseTestClass {
 
     @Autowired
-    private RestaurantRepositoryImpl repository;
+    private RestaurantRepository repository;
 
     @Test
     void save() {
@@ -85,11 +86,21 @@ class RestaurantRepositoryTest extends BaseTestClass {
 
     @Test
     void getWithOutOfDateMeals() {
-        assertNull(repository.getWithMealsByDate(MC_DONALDS_ID, LocalDate.now()));
+        assertNull(repository.getWithMealsByDate(MC_DONALDS_ID, DATE_OF_MEALS_INIT.minusDays(1)));
     }
 
     @Test
     void getAll() {
         RESTAURANT_MATCHER.assertMatch(repository.getAll(), all);
+    }
+
+    @Test
+    void getAllUpToDate() {
+        RESTAURANT_MATCHER.assertMatch(repository.getAllUpToDate(DATE_OF_MEALS_INIT), allWithActualMenu);
+    }
+
+    @Test
+    void getAllWithMealsByDate() {
+        RESTAURANT_WITH_MEALS_MATCHER.assertMatch(repository.getAllWithMealsByDate(DATE_OF_MEALS_INIT), allWithActualMenu);
     }
 }

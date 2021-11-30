@@ -9,7 +9,9 @@ import static com.github.afanas10101111.dfl.RestaurantTestUtil.MC_DONALDS_ID;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.NA_ID;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.RESTAURANT_MATCHER;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.RESTAURANT_WITH_MEALS_MATCHER;
+import static com.github.afanas10101111.dfl.RestaurantTestUtil.SUB_WAY_ID;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.all;
+import static com.github.afanas10101111.dfl.RestaurantTestUtil.allWithActualMenu;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.burgerKing;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.getNew;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.getUpdated;
@@ -69,11 +71,21 @@ class RestaurantServiceTest extends BaseServiceTestClass {
 
     @Test
     void getWithOutOfDateMeals() {
-        assertThrows(NotFoundException.class, () -> service.getWithMeals(MC_DONALDS_ID));
+        assertThrows(NotFoundException.class, () -> service.getWithMeals(SUB_WAY_ID));
     }
 
     @Test
     void getAll() {
         RESTAURANT_MATCHER.assertMatch(service.getAll(), all);
+    }
+
+    @Test
+    void getAllUpToDate() {
+        RESTAURANT_MATCHER.assertMatch(service.getAllUpToDate(), allWithActualMenu);
+    }
+
+    @Test
+    void getAllWithMealsByDate() {
+        RESTAURANT_MATCHER.assertMatch(service.getAllWithMealsByDate(), allWithActualMenu);
     }
 }

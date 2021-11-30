@@ -14,7 +14,7 @@ CREATE TABLE users
     password     VARCHAR                          NOT NULL,
     registered   TIMESTAMP          DEFAULT now() NOT NULL,
     enabled      BOOL               DEFAULT TRUE  NOT NULL,
-    vote_date    TIMESTAMP,
+    vote_date    DATE,
     voted_for_id INTEGER
 );
 CREATE UNIQUE INDEX users_unique_email_idx ON users (email);
@@ -38,10 +38,10 @@ CREATE TABLE restaurants
 CREATE TABLE meals
 (
     id            BIGINT PRIMARY KEY DEFAULT nextval('global_seq'),
-    restaurant_id BIGINT    NOT NULL,
-    name          VARCHAR   NOT NULL,
-    price         NUMERIC   NOT NULL,
-    date          TIMESTAMP NOT NULL,
+    restaurant_id BIGINT  NOT NULL,
+    name          VARCHAR NOT NULL,
+    price         NUMERIC NOT NULL,
+    created       DATE    NOT NULL,
     CONSTRAINT restaurant_meal_idx UNIQUE (restaurant_id, name),
     FOREIGN KEY (restaurant_id) REFERENCES restaurants (id) ON DELETE CASCADE
 );

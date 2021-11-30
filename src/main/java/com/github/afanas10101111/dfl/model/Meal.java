@@ -38,14 +38,14 @@ public class Meal extends NamedEntity {
     @NotNull
     private Double price;
 
-    @Column(name = "date", nullable = false)
+    @Column(name = "created", nullable = false)
     @NotNull
-    private LocalDate date;
+    private LocalDate created;
 
     public Meal(String name, Double price) {
         super(null, name);
         this.price = price;
-        date = LocalDate.now();
+        created = LocalDate.now();
     }
 
     @Override
