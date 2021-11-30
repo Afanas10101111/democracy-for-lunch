@@ -44,11 +44,6 @@ class UserRepositoryTest extends BaseTestClass {
         User aNew = getNew();
         aNew.setEmail(user.getEmail());
         assertThrows(DataIntegrityViolationException.class, () -> repository.save(aNew));
-
-        // TODO handle case with update
-        /*User na = getUpdated();
-        na.setId(NA_ID);
-        assertThrows(DataIntegrityViolationException.class, () -> repository.save(na));*/
     }
 
     @Test

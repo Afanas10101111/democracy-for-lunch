@@ -51,6 +51,15 @@ class RestaurantServiceTest extends BaseServiceTestClass {
     }
 
     @Test
+    void updateNaAndNew() {
+        Restaurant updated = getUpdated();
+        updated.setId(NA_ID);
+        assertThrows(NotFoundException.class, () -> service.update(updated));
+        Restaurant aNew = getNew();
+        assertThrows(IllegalArgumentException.class, () -> service.update(aNew));
+    }
+
+    @Test
     void createOrUpdateWithNull() {
         assertThrows(IllegalArgumentException.class, () -> service.create(null));
         assertThrows(IllegalArgumentException.class, () -> service.update(null));

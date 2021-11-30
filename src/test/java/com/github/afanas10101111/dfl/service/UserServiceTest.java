@@ -38,6 +38,15 @@ class UserServiceTest extends BaseServiceTestClass {
     }
 
     @Test
+    void updateNaAndNew() {
+        User updated = getUpdated();
+        updated.setId(NA_ID);
+        assertThrows(NotFoundException.class, () -> service.update(updated));
+        User aNew = getNew();
+        assertThrows(IllegalArgumentException.class, () -> service.update(aNew));
+    }
+
+    @Test
     void createOrUpdateWithNull() {
         assertThrows(IllegalArgumentException.class, () -> service.create(null));
         assertThrows(IllegalArgumentException.class, () -> service.update(null));

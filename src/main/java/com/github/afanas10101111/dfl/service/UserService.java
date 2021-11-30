@@ -23,7 +23,8 @@ public class UserService {
 
     public void update(User user) {
         Assert.notNull(user, ASSERT_MESSAGE);
-        ValidationUtil.checkNotFoundWithId(repository.save(user), user.id());
+        get(user.id());
+        repository.save(user);
     }
 
     public void delete(long id) {
