@@ -19,13 +19,13 @@ public interface DataJpaRestaurantRepository extends JpaRepository<Restaurant, L
     int delete(long id);
 
     @EntityGraph(attributePaths = "meals")
-    @Query("SELECT r FROM Restaurant r JOIN Meal m ON m.restaurant.id = r.id WHERE r.id = ?1 AND m.created = ?2")
+    @Query("SELECT r FROM Restaurant r JOIN r.meals m WHERE r.id = ?1 AND m.created = ?2")
     Restaurant getWithMealsByDate(long id, LocalDate date);
 
-    @Query("SELECT DISTINCT r FROM Restaurant r JOIN Meal m ON m.restaurant.id = r.id WHERE m.created = ?1 ORDER BY r.name, r.address")
-    List<Restaurant>  getAllUpToDate(LocalDate date);
+    @Query("SELECT DISTINCT r FROM Restaurant r JOIN r.meals m WHERE m.created = ?1 ORDER BY r.name, r.address")
+    List<Restaurant> getAllUpToDate(LocalDate date);
 
     @EntityGraph(attributePaths = "meals")
-    @Query("SELECT r FROM Restaurant r JOIN Meal m ON m.restaurant.id = r.id WHERE m.created = ?1 ORDER BY r.name, r.address")
+    @Query("SELECT r FROM Restaurant r JOIN r.meals m WHERE m.created = ?1 ORDER BY r.name, r.address")
     List<Restaurant> getAllWithMealsByDate(LocalDate date);
 }

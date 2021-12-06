@@ -18,7 +18,7 @@ public class UserTestUtil {
     public static final String NA_EMAIL = "someEmail@email.me";
 
     public static final User admin = new User("Admin", "admin@gmail.com", "admin", true, Set.of(Role.USER, Role.ADMIN));
-    public static final User user = new User("User", "user@yandex.ru", "password", true, Set.of(Role.USER));
+    public static final User user = new User("Юзер", "user@yandex.ru", "password", true, Set.of(Role.USER));
 
     public static final List<User> all = List.of(admin, user);
 

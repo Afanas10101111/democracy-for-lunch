@@ -39,7 +39,7 @@ public class RestaurantTestUtil {
     public static final Restaurant mcDonalds = new Restaurant("McDonalds", "Moscow", List.of(bigMak, cheeseburger, hamburger));
     public static final Restaurant burgerKing = new Restaurant("BurgerKing", "Moscow", List.of(kingBurger, kingBurgerRoyal));
     public static final Restaurant kfc = new Restaurant("KFC", "Moscow", List.of(bigBasket, sundersWings));
-    public static final Restaurant subWay = new Restaurant("SubWay", "Moscow", List.of(megaSandwich));
+    public static final Restaurant subWay = new Restaurant("SubWay", "Москва", List.of(megaSandwich));
 
     public static final List<Restaurant> all = List.of(burgerKing, kfc, mcDonalds, subWay);
     public static final List<Restaurant> allWithActualMenu = List.of(burgerKing, kfc, mcDonalds);

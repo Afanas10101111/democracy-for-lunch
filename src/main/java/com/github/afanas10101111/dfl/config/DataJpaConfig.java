@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,8 +68,8 @@ public class DataJpaConfig {
         dataSource.setPassword(jdbcPassword);
 
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(new String(new ClassPathResource(initLocation).getInputStream().readAllBytes()));
-        stringBuilder.append(new String(new ClassPathResource(populateLocation).getInputStream().readAllBytes()));
+        stringBuilder.append(new String(new ClassPathResource(initLocation).getInputStream().readAllBytes(), StandardCharsets.UTF_8));
+        stringBuilder.append(new String(new ClassPathResource(populateLocation).getInputStream().readAllBytes(), StandardCharsets.UTF_8));
         dataSource.setInitSQL(stringBuilder.toString());
         return dataSource;
     }
