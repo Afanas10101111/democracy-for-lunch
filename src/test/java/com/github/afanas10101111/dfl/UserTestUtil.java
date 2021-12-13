@@ -1,5 +1,6 @@
 package com.github.afanas10101111.dfl;
 
+import com.github.afanas10101111.dfl.dto.UserTo;
 import com.github.afanas10101111.dfl.model.Role;
 import com.github.afanas10101111.dfl.model.User;
 
@@ -35,6 +36,17 @@ public class UserTestUtil {
         User updated = new User("Updated", "up@up.up", "4321", false, Set.of(Role.USER, Role.ADMIN));
         updated.setId(USER_ID);
         return updated;
+    }
+
+    public static UserTo getTo(User user) {
+        UserTo to = new UserTo();
+        to.setId(user.getId());
+        to.setName(user.getName());
+        to.setEmail(user.getEmail());
+        to.setPassword(user.getPassword());
+        to.setEnabled(user.isEnabled());
+        to.setRoles(user.getRoles());
+        return to;
     }
 
     public static User getVotedUser() {

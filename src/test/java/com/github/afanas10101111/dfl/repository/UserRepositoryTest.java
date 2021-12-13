@@ -47,6 +47,15 @@ class UserRepositoryTest extends BaseTestClass {
     }
 
     @Test
+    void enable() {
+        assertTrue(repository.get(USER_ID).isEnabled());
+        repository.enable(USER_ID, false);
+        assertFalse(repository.get(USER_ID).isEnabled());
+        repository.enable(USER_ID, true);
+        assertTrue(repository.get(USER_ID).isEnabled());
+    }
+
+    @Test
     void delete() {
         assertTrue(repository.delete(USER_ID));
         assertNull(repository.get(USER_ID));

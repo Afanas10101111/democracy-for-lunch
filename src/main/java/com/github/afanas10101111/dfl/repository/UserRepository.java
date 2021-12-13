@@ -18,6 +18,10 @@ public class UserRepository {
         return repository.save(user);
     }
 
+    public boolean enable(long id, boolean enable) {
+        return repository.enable(id, enable) != 0;
+    }
+
     public boolean delete(long id) {
         return repository.delete(id) != 0;
     }

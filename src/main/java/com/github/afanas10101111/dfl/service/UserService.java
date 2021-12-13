@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -21,10 +22,22 @@ public class UserService {
         return repository.save(user);
     }
 
+    @Transactional
     public void update(User user) {
         Assert.notNull(user, ASSERT_MESSAGE);
-        get(user.id());
-        repository.save(user);
+        User userFromDb = get(user.id());
+
+        userFromDb.setName(user.getName());
+        userFromDb.setEmail(user.getEmail());
+        userFromDb.setPassword(user.getPassword());
+        userFromDb.setEnabled(user.isEnabled());
+        userFromDb.setVoteDate(user.getVoteDate());
+        userFromDb.setVotedForId(user.getVotedForId());
+        userFromDb.setRoles(user.getRoles());
+    }
+
+    public void enable(long id, boolean enable) {
+        ValidationUtil.checkNotFoundWithId(repository.enable(id, enable), id);
     }
 
     public void delete(long id) {

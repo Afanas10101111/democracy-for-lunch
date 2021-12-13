@@ -9,6 +9,7 @@ import java.util.List;
 public class RestaurantTestUtil {
     public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_MATCHER = MatcherFactory.createWithFieldsToIgnore("meals");
     public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_WITH_MEALS_MATCHER = MatcherFactory.createWithFieldsToIgnore("meals.date", "meals.restaurant");
+    public static final MatcherFactory.Matcher<Meal> MEALS_MATCHER = MatcherFactory.createWithFieldsToIgnore("date", "restaurant");
 
     public static final LocalDate NOW = LocalDate.now();
 
@@ -26,6 +27,7 @@ public class RestaurantTestUtil {
     public static final long SUNDERS_WINGS_ID = 100011;
     public static final long BIG_BASKET_ID = 100012;
     public static final long MEGA_SANDWICH_ID = 100013;
+    public static final long NEW_PIE_ID = 100014;
 
     public static final Meal hamburger = new Meal("hamburger", 50.00);
     public static final Meal cheeseburger = new Meal("cheeseburger", 60.00);
@@ -35,6 +37,7 @@ public class RestaurantTestUtil {
     public static final Meal sundersWings = new Meal("sunders wings", 90.00);
     public static final Meal bigBasket = new Meal("big basket", 190.00);
     public static final Meal megaSandwich = new Meal("mega sandwich", 100.00);
+    public static final Meal aNewPie = new Meal("aNewPie", 88.88);
 
     public static final Restaurant mcDonalds = new Restaurant("McDonalds", "Moscow", List.of(bigMak, cheeseburger, hamburger));
     public static final Restaurant burgerKing = new Restaurant("BurgerKing", "Moscow", List.of(kingBurger, kingBurgerRoyal));
@@ -53,6 +56,7 @@ public class RestaurantTestUtil {
         sundersWings.setId(SUNDERS_WINGS_ID);
         bigBasket.setId(BIG_BASKET_ID);
         megaSandwich.setId(MEGA_SANDWICH_ID);
+        aNewPie.setId(NEW_PIE_ID);
 
         mcDonalds.setId(MC_DONALDS_ID);
         burgerKing.setId(BURGER_KING_ID);
@@ -68,5 +72,9 @@ public class RestaurantTestUtil {
         Restaurant updated = new Restaurant("MAC", "Washington DC", List.of(hamburger, cheeseburger));
         updated.setId(MC_DONALDS_ID);
         return updated;
+    }
+
+    public static List<Meal> getNewMeals() {
+        return List.of(new Meal(aNewPie.getName(), aNewPie.getPrice()));
     }
 }

@@ -1,5 +1,6 @@
 package com.github.afanas10101111.dfl.service;
 
+import com.github.afanas10101111.dfl.model.Meal;
 import com.github.afanas10101111.dfl.model.Restaurant;
 import com.github.afanas10101111.dfl.repository.RestaurantRepository;
 import com.github.afanas10101111.dfl.util.ValidationUtil;
@@ -7,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -22,11 +25,21 @@ public class RestaurantService {
         return repository.save(restaurant);
     }
 
-    // TODO need method for separate meal set/update with setting zero voices
+    @Transactional
     public void update(Restaurant restaurant) {
         Assert.notNull(restaurant, ASSERT_MESSAGE);
-        get(restaurant.id());
-        repository.save(restaurant);
+        Restaurant restaurantFromDb = get(restaurant.id());
+
+        restaurantFromDb.setName(restaurant.getName());
+        restaurantFromDb.setAddress(restaurant.getAddress());
+        restaurantFromDb.setVoices(restaurant.getVoices());
+    }
+
+    @Transactional
+    public void updateMeals(long id, Collection<Meal> meals) {
+        Assert.notNull(meals, ASSERT_MESSAGE);
+        Restaurant restaurantFromDb = getWithMeals(id);
+        restaurantFromDb.addMeals(meals);
     }
 
     public void delete(long id) {

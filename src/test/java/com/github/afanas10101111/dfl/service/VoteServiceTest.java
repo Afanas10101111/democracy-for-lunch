@@ -1,5 +1,6 @@
 package com.github.afanas10101111.dfl.service;
 
+import com.github.afanas10101111.dfl.BaseServiceTestClass;
 import com.github.afanas10101111.dfl.RestaurantTestUtil;
 import com.github.afanas10101111.dfl.UserTestUtil;
 import com.github.afanas10101111.dfl.exception.NotFoundException;

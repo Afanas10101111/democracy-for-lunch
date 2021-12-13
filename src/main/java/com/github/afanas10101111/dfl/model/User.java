@@ -52,7 +52,7 @@ public class User extends NamedEntity {
 
     @Column(name = "registered", nullable = false)
     @NotNull
-    private Date registered;
+    private Date registered = new Date();
 
     @Column(name = "enabled", nullable = false)
     private boolean enabled;
@@ -80,7 +80,6 @@ public class User extends NamedEntity {
         this.email = email;
         this.password = password;
         this.enabled = enabled;
-        registered = new Date();
         setRoles(roles);
     }
 
@@ -88,4 +87,13 @@ public class User extends NamedEntity {
         this.roles = CollectionUtils.isEmpty(roles) ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }
