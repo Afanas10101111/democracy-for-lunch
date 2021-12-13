@@ -4,15 +4,13 @@ import com.github.afanas10101111.dfl.model.Meal;
 import com.github.afanas10101111.dfl.model.Restaurant;
 
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.List;
-import java.util.Set;
 
 public class RestaurantTestUtil {
     public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_MATCHER = MatcherFactory.createWithFieldsToIgnore("meals");
     public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_WITH_MEALS_MATCHER = MatcherFactory.createWithFieldsToIgnore("meals.date", "meals.restaurant");
 
-    public static final LocalDate DATE_OF_MEALS_INIT = LocalDate.of(2021, Month.NOVEMBER, 18);
+    public static final LocalDate NOW = LocalDate.now();
 
     public static final long MC_DONALDS_ID = 100002;
     public static final long BURGER_KING_ID = 100003;
@@ -38,12 +36,13 @@ public class RestaurantTestUtil {
     public static final Meal bigBasket = new Meal("big basket", 190.00);
     public static final Meal megaSandwich = new Meal("mega sandwich", 100.00);
 
-    public static final Restaurant mcDonalds = new Restaurant("McDonalds", "Moscow", Set.of(bigMak, cheeseburger, hamburger));
-    public static final Restaurant burgerKing = new Restaurant("BurgerKing", "Moscow", Set.of(kingBurger, kingBurgerRoyal));
-    public static final Restaurant kfc = new Restaurant("KFC", "Moscow", Set.of(bigBasket, sundersWings));
-    public static final Restaurant subWay = new Restaurant("SubWay", "Moscow", Set.of(megaSandwich));
+    public static final Restaurant mcDonalds = new Restaurant("McDonalds", "Moscow", List.of(bigMak, cheeseburger, hamburger));
+    public static final Restaurant burgerKing = new Restaurant("BurgerKing", "Moscow", List.of(kingBurger, kingBurgerRoyal));
+    public static final Restaurant kfc = new Restaurant("KFC", "Moscow", List.of(bigBasket, sundersWings));
+    public static final Restaurant subWay = new Restaurant("SubWay", "Москва", List.of(megaSandwich));
 
     public static final List<Restaurant> all = List.of(burgerKing, kfc, mcDonalds, subWay);
+    public static final List<Restaurant> allWithActualMenu = List.of(burgerKing, kfc, mcDonalds);
 
     static {
         hamburger.setId(HAMBURGER_ID);
@@ -52,8 +51,8 @@ public class RestaurantTestUtil {
         kingBurger.setId(KING_BURGER_ID);
         kingBurgerRoyal.setId(KING_BURGER_ROYAL_ID);
         sundersWings.setId(SUNDERS_WINGS_ID);
-        megaSandwich.setId(BIG_BASKET_ID);
-        bigBasket.setId(MEGA_SANDWICH_ID);
+        bigBasket.setId(BIG_BASKET_ID);
+        megaSandwich.setId(MEGA_SANDWICH_ID);
 
         mcDonalds.setId(MC_DONALDS_ID);
         burgerKing.setId(BURGER_KING_ID);
@@ -62,11 +61,11 @@ public class RestaurantTestUtil {
     }
 
     public static Restaurant getNew() {
-        return new Restaurant("New", "Neq York", Set.of(new Meal(hamburger.getName(), hamburger.getPrice())));
+        return new Restaurant("New", "Neq York", List.of(new Meal(hamburger.getName(), hamburger.getPrice())));
     }
 
     public static Restaurant getUpdated() {
-        Restaurant updated = new Restaurant("MAC", "Washington DC", Set.of(hamburger, cheeseburger));
+        Restaurant updated = new Restaurant("MAC", "Washington DC", List.of(hamburger, cheeseburger));
         updated.setId(MC_DONALDS_ID);
         return updated;
     }
