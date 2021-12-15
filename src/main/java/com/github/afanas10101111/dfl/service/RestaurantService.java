@@ -62,7 +62,7 @@ public class RestaurantService {
         return repository.getAllUpToDate(LocalDate.now());
     }
 
-    public List<Restaurant> getAllWithMealsByDate() {
+    public List<Restaurant> getAllWithMealsUpToDate() {
         return repository.getAllWithMealsByDate(LocalDate.now());
     }
 }

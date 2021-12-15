@@ -39,27 +39,23 @@ public class UserTestUtil {
     }
 
     public static UserTo getTo(User user) {
-        UserTo to = new UserTo();
-        to.setId(user.getId());
-        to.setName(user.getName());
-        to.setEmail(user.getEmail());
-        to.setPassword(user.getPassword());
-        to.setEnabled(user.isEnabled());
-        to.setRoles(user.getRoles());
-        return to;
+        return new UserTo(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getPassword(),
+                user.isEnabled(),
+                null,
+                null,
+                user.getRoles()
+        );
     }
 
     public static User getVotedUser() {
-        User user = new User(
-                UserTestUtil.user.getName(),
-                UserTestUtil.user.getEmail(),
-                UserTestUtil.user.getPassword(),
-                UserTestUtil.user.isEnabled(),
-                UserTestUtil.user.getRoles()
-        );
-        user.setId(USER_ID);
-        user.setVoteDate(LocalDate.now());
-        user.setVotedForId(MC_DONALDS_ID);
-        return user;
+        User votedUser = new User(user.getName(), user.getEmail(), user.getPassword(), user.isEnabled(), user.getRoles());
+        votedUser.setId(USER_ID);
+        votedUser.setVoteDate(LocalDate.now());
+        votedUser.setVotedForId(MC_DONALDS_ID);
+        return votedUser;
     }
 }

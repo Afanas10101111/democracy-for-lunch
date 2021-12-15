@@ -1,4 +1,4 @@
-package com.github.afanas10101111.dfl.web;
+package com.github.afanas10101111.dfl.web.user;
 
 import com.github.afanas10101111.dfl.BaseWebTestClass;
 import com.github.afanas10101111.dfl.JsonTestUtil;
@@ -30,12 +30,12 @@ class AdminControllerTest extends BaseWebTestClass {
 
     @Test
     void getAll() throws Exception {
-        USER_MATCHER.assertMatch(JsonTestUtil.readValues(mapper, getGetResult(URL, null), User.class), all);
+        USER_MATCHER.assertMatch(JsonTestUtil.readValues(mapper, getGetResult(URL), User.class), all);
     }
 
     @Test
     void get() throws Exception {
-        USER_MATCHER.assertMatch(JsonTestUtil.readValue(mapper, getGetResult(URL + USER_ID, null), User.class), user);
+        USER_MATCHER.assertMatch(JsonTestUtil.readValue(mapper, getGetResult(URL + USER_ID), User.class), user);
     }
 
     @Test
@@ -47,20 +47,20 @@ class AdminControllerTest extends BaseWebTestClass {
 
     @Test
     void delete() throws Exception {
-        assertDoesNotThrow(() -> service.get(USER_ID));
+        assertDoesNotThrow(() -> userService.get(USER_ID));
         mockMvc.perform(MockMvcRequestBuilders.delete(URL + USER_ID))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> service.get(USER_ID));
+        assertThrows(NotFoundException.class, () -> userService.get(USER_ID));
     }
 
     @Test
     void enable() throws Exception {
-        assertTrue(service.get(USER_ID).isEnabled());
+        assertTrue(userService.get(USER_ID).isEnabled());
         mockMvc.perform(MockMvcRequestBuilders.patch(URL + USER_ID).param("enable", "false"))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertFalse(service.get(USER_ID).isEnabled());
+        assertFalse(userService.get(USER_ID).isEnabled());
     }
 
     @Test
@@ -72,7 +72,7 @@ class AdminControllerTest extends BaseWebTestClass {
         )
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        USER_MATCHER.assertMatch(service.get(USER_ID), getUpdated());
+        USER_MATCHER.assertMatch(userService.get(USER_ID), getUpdated());
     }
 
     @Test

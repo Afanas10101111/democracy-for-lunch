@@ -1,4 +1,4 @@
-package com.github.afanas10101111.dfl.web;
+package com.github.afanas10101111.dfl.web.user;
 
 import com.github.afanas10101111.dfl.dto.UserTo;
 import com.github.afanas10101111.dfl.model.User;

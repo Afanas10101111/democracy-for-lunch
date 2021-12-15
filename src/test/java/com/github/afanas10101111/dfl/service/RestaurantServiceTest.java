@@ -107,7 +107,7 @@ class RestaurantServiceTest extends BaseServiceTestClass {
     }
 
     @Test
-    void getAllWithMealsByDate() {
-        RESTAURANT_MATCHER.assertMatch(service.getAllWithMealsByDate(), allWithActualMenu);
+    void getAllWithMealsUpToDate() {
+        RESTAURANT_WITH_MEALS_MATCHER.assertMatch(service.getAllWithMealsUpToDate(), allWithActualMenu);
     }
 }

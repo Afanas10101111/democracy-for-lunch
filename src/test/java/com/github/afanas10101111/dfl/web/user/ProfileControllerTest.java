@@ -1,4 +1,4 @@
-package com.github.afanas10101111.dfl.web;
+package com.github.afanas10101111.dfl.web.user;
 
 import com.github.afanas10101111.dfl.BaseWebTestClass;
 import com.github.afanas10101111.dfl.JsonTestUtil;
@@ -23,16 +23,16 @@ class ProfileControllerTest extends BaseWebTestClass {
 
     @Test
     void get() throws Exception {
-        USER_MATCHER.assertMatch(JsonTestUtil.readValue(mapper, getGetResult(URL, null), User.class), user);
+        USER_MATCHER.assertMatch(JsonTestUtil.readValue(mapper, getGetResult(URL), User.class), user);
     }
 
     @Test
     void delete() throws Exception {
-        assertDoesNotThrow(() -> service.get(USER_ID));
+        assertDoesNotThrow(() -> userService.get(USER_ID));
         mockMvc.perform(MockMvcRequestBuilders.delete(URL))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> service.get(USER_ID));
+        assertThrows(NotFoundException.class, () -> userService.get(USER_ID));
     }
 
     @Test
@@ -44,6 +44,6 @@ class ProfileControllerTest extends BaseWebTestClass {
         )
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        USER_MATCHER.assertMatch(service.get(USER_ID), getUpdated());
+        USER_MATCHER.assertMatch(userService.get(USER_ID), getUpdated());
     }
 }

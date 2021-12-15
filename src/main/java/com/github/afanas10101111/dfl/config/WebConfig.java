@@ -22,29 +22,29 @@ import java.util.List;
 @Configuration
 @ComponentScan("com.github.afanas10101111.dfl.web")
 public class WebConfig implements WebMvcConfigurer {
-    private ObjectMapper mapper;
+    private ObjectMapper objectMapper;
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.add(new MappingJackson2HttpMessageConverter(getMapper()));
+        converters.add(new MappingJackson2HttpMessageConverter(getObjectMapper()));
     }
 
     @Bean
     public ObjectMapper objectMapper() {
-        return getMapper();
+        return getObjectMapper();
     }
 
-    private ObjectMapper getMapper() {
-        if (mapper == null) {
-            mapper = new ObjectMapper();
-            mapper.registerModule(new Hibernate5Module());
-            mapper.registerModule(new JavaTimeModule());
-            mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-            mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
-            mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-            mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    private ObjectMapper getObjectMapper() {
+        if (objectMapper == null) {
+            objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new Hibernate5Module());
+            objectMapper.registerModule(new JavaTimeModule());
+            objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+            objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
+            objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         }
-        return mapper;
+        return objectMapper;
     }
 
     @Bean

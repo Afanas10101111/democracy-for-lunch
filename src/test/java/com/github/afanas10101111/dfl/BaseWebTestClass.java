@@ -2,6 +2,7 @@ package com.github.afanas10101111.dfl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.afanas10101111.dfl.config.WebConfig;
+import com.github.afanas10101111.dfl.service.RestaurantService;
 import com.github.afanas10101111.dfl.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -30,7 +31,10 @@ public abstract class BaseWebTestClass extends BaseServiceTestClass {
     protected ObjectMapper mapper;
 
     @Autowired
-    protected UserService service;
+    protected UserService userService;
+
+    @Autowired
+    protected RestaurantService restaurantService;
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -54,5 +58,9 @@ public abstract class BaseWebTestClass extends BaseServiceTestClass {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andReturn();
+    }
+
+    protected MvcResult getGetResult(String url) throws Exception {
+        return getGetResult(url, null);
     }
 }

@@ -1,14 +1,19 @@
 package com.github.afanas10101111.dfl;
 
+import com.github.afanas10101111.dfl.dto.MealTo;
+import com.github.afanas10101111.dfl.dto.RestaurantTo;
 import com.github.afanas10101111.dfl.model.Meal;
 import com.github.afanas10101111.dfl.model.Restaurant;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RestaurantTestUtil {
     public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_MATCHER = MatcherFactory.createWithFieldsToIgnore("meals");
+    public static final MatcherFactory.Matcher<RestaurantTo> RESTAURANT_TO_MATCHER = MatcherFactory.createWithFieldsToIgnore("meals");
     public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_WITH_MEALS_MATCHER = MatcherFactory.createWithFieldsToIgnore("meals.date", "meals.restaurant");
+    public static final MatcherFactory.Matcher<RestaurantTo> RESTAURANT_TO_WITH_MEALS_MATCHER = MatcherFactory.createWithFieldsToIgnore("");
     public static final MatcherFactory.Matcher<Meal> MEALS_MATCHER = MatcherFactory.createWithFieldsToIgnore("date", "restaurant");
 
     public static final LocalDate NOW = LocalDate.now();
@@ -46,6 +51,7 @@ public class RestaurantTestUtil {
 
     public static final List<Restaurant> all = List.of(burgerKing, kfc, mcDonalds, subWay);
     public static final List<Restaurant> allWithActualMenu = List.of(burgerKing, kfc, mcDonalds);
+    public static final List<RestaurantTo> allTosWithActualMenu;
 
     static {
         hamburger.setId(HAMBURGER_ID);
@@ -62,6 +68,10 @@ public class RestaurantTestUtil {
         burgerKing.setId(BURGER_KING_ID);
         kfc.setId(KFC_ID);
         subWay.setId(SUB_WAY_ID);
+
+        allTosWithActualMenu = allWithActualMenu.stream()
+                .map(RestaurantTestUtil::getTo)
+                .collect(Collectors.toList());
     }
 
     public static Restaurant getNew() {
@@ -76,5 +86,21 @@ public class RestaurantTestUtil {
 
     public static List<Meal> getNewMeals() {
         return List.of(new Meal(aNewPie.getName(), aNewPie.getPrice()));
+    }
+
+    public static RestaurantTo getTo(Restaurant restaurant) {
+        return new RestaurantTo(
+                restaurant.id(),
+                restaurant.getName(),
+                restaurant.getAddress(),
+                restaurant.getVoices(),
+                restaurant.getMeals().stream()
+                        .map(RestaurantTestUtil::getMealTo)
+                        .collect(Collectors.toSet())
+        );
+    }
+
+    public static MealTo getMealTo(Meal meal) {
+        return new MealTo(meal.getName(), meal.getPrice());
     }
 }
