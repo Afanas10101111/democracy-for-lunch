@@ -1,6 +1,8 @@
 package com.github.afanas10101111.dfl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.afanas10101111.dfl.config.WebConfig;
+import com.github.afanas10101111.dfl.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
@@ -23,6 +25,12 @@ public abstract class BaseWebTestClass extends BaseServiceTestClass {
     private static final CharacterEncodingFilter CHARACTER_ENCODING_FILTER = new CharacterEncodingFilter();
 
     protected MockMvc mockMvc;
+
+    @Autowired
+    protected ObjectMapper mapper;
+
+    @Autowired
+    protected UserService service;
 
     @Autowired
     private WebApplicationContext webApplicationContext;

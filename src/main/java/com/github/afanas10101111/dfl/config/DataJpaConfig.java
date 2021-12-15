@@ -1,6 +1,5 @@
 package com.github.afanas10101111.dfl.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -75,7 +74,6 @@ public class DataJpaConfig {
     }
 
     @Bean
-    @Autowired
     public EntityManagerFactory entityManagerFactory(DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
         factoryBean.setDataSource(dataSource);
@@ -96,7 +94,6 @@ public class DataJpaConfig {
     }
 
     @Bean
-    @Autowired
     public TransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);
     }

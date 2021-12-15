@@ -2,11 +2,8 @@ package com.github.afanas10101111.dfl.web;
 
 import com.github.afanas10101111.dfl.dto.UserTo;
 import com.github.afanas10101111.dfl.model.User;
-import com.github.afanas10101111.dfl.service.UserService;
 import com.github.afanas10101111.dfl.util.ValidationUtil;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,14 +23,10 @@ import java.net.URI;
 import java.util.List;
 
 @Slf4j
-@RequiredArgsConstructor
 @RestController
 @RequestMapping(value = AdminController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
-public class AdminController {
+public class AdminController extends BaseUserController {
     public static final String URL = "/admin/users";
-
-    private final UserService service;
-    private final ModelMapper mapper;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> createWithLocation(@RequestBody UserTo userTo) {
@@ -47,13 +40,11 @@ public class AdminController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
+    @Override
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@PathVariable long id, @RequestBody UserTo userTo) {
-        log.info("update with id = {}, set {}", id, userTo);
-        User updatedFromTo = mapper.map(userTo, User.class);
-        ValidationUtil.checkIdConsistent(id, updatedFromTo);
-        service.update(updatedFromTo);
+        super.update(id, userTo);
     }
 
     @PatchMapping("/{id}")
@@ -63,17 +54,17 @@ public class AdminController {
         service.enable(id, enable);
     }
 
+    @Override
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable long id) {
-        log.info("delete with id = {}", id);
-        service.delete(id);
+        super.delete(id);
     }
 
+    @Override
     @GetMapping("/{id}")
     public User get(@PathVariable long id) {
-        log.info("get with id = {}", id);
-        return service.get(id);
+        return super.get(id);
     }
 
     @GetMapping("/by-email")

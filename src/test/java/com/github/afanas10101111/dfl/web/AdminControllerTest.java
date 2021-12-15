@@ -1,13 +1,10 @@
 package com.github.afanas10101111.dfl.web;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.afanas10101111.dfl.BaseWebTestClass;
 import com.github.afanas10101111.dfl.JsonTestUtil;
 import com.github.afanas10101111.dfl.exception.NotFoundException;
 import com.github.afanas10101111.dfl.model.User;
-import com.github.afanas10101111.dfl.service.UserService;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -30,12 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class AdminControllerTest extends BaseWebTestClass {
     private static final String URL = AdminController.URL + '/';
-
-    @Autowired
-    private ObjectMapper mapper;
-
-    @Autowired
-    private UserService service;
 
     @Test
     void getAll() throws Exception {
