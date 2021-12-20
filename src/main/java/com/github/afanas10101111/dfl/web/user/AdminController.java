@@ -67,7 +67,7 @@ public class AdminController extends BaseUserController {
     @GetMapping("/by-email")
     public User getByEmail(String email) {
         log.info("getByEmail {}", email);
-        return service.getByEmail(email);
+        return service.getByEmail(email.toLowerCase());
     }
 
     @GetMapping
