@@ -5,7 +5,6 @@ import com.github.afanas10101111.dfl.JsonTestUtil;
 import com.github.afanas10101111.dfl.exception.NotFoundException;
 import com.github.afanas10101111.dfl.model.User;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.LinkedMultiValueMap;
@@ -48,9 +47,7 @@ class AdminControllerTest extends BaseWebTestClass {
     @Test
     void delete() throws Exception {
         assertDoesNotThrow(() -> userService.get(USER_ID));
-        mockMvc.perform(MockMvcRequestBuilders.delete(URL + USER_ID))
-                .andDo(print())
-                .andExpect(status().isNoContent());
+        performDelete(URL + USER_ID);
         assertThrows(NotFoundException.class, () -> userService.get(USER_ID));
     }
 
@@ -65,27 +62,14 @@ class AdminControllerTest extends BaseWebTestClass {
 
     @Test
     void update() throws Exception {
-        mockMvc.perform(
-                MockMvcRequestBuilders.put(URL + USER_ID)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(getTo(getUpdated())))
-        )
-                .andDo(print())
-                .andExpect(status().isNoContent());
+        performPut(URL + USER_ID, getTo(getUpdated()));
         USER_MATCHER.assertMatch(userService.get(USER_ID), getUpdated());
     }
 
     @Test
     void createWithLocation() throws Exception {
         User expected = getNew();
-        MvcResult result = mockMvc.perform(
-                MockMvcRequestBuilders.post(URL)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(getTo(expected)))
-        )
-                .andDo(print())
-                .andExpect(status().isCreated())
-                .andReturn();
+        MvcResult result = getPostResult(URL, getTo(expected));
         User actual = JsonTestUtil.readValue(mapper, result, User.class);
         expected.setId(actual.getId());
         USER_MATCHER.assertMatch(actual, expected);

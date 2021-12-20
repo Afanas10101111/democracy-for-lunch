@@ -21,32 +21,44 @@ abstract class BaseRestaurantController {
 
     public RestaurantTo get(long id) {
         log.info("get with id = {}", id);
-        return getToWithoutMeals(service.get(id));
+        return getTo(service.get(id));
     }
 
     public RestaurantTo getWithMeals(long id) {
         log.info("getWithMeals with id = {}", id);
-        return mapper.map(service.getWithMeals(id), RestaurantTo.class);
+        return getToWithMeals(service.getWithMeals(id));
     }
 
     public List<RestaurantTo> getAllUpToDate() {
         log.info("getAllUpToDate");
-        return service.getAllUpToDate().stream()
-                .map(this::getToWithoutMeals)
-                .collect(Collectors.toList());
+        return getTos(service.getAllUpToDate());
     }
 
     public List<RestaurantTo> getAllWithMealsUpToDate() {
         log.info("getAllWithMealsByDate");
-        return service.getAllWithMealsUpToDate().stream()
-                .map(r -> mapper.map(r, RestaurantTo.class))
+        return getTosWithMeals(service.getAllWithMealsUpToDate());
+    }
+
+    protected RestaurantTo getToWithMeals(Restaurant restaurant) {
+        return mapper.map(restaurant, RestaurantTo.class);
+    }
+
+    protected List<RestaurantTo> getTosWithMeals(List<Restaurant> restaurants) {
+        return restaurants.stream()
+                .map(this::getToWithMeals)
                 .collect(Collectors.toList());
     }
 
-    private RestaurantTo getToWithoutMeals(Restaurant restaurant) {
+    protected RestaurantTo getTo(Restaurant restaurant) {
         restaurant.setMeals(null);
-        RestaurantTo to = mapper.map(restaurant, RestaurantTo.class);
+        RestaurantTo to = getToWithMeals(restaurant);
         to.setMeals(null);
         return to;
+    }
+
+    protected List<RestaurantTo> getTos(List<Restaurant> restaurants) {
+        return restaurants.stream()
+                .map(this::getTo)
+                .collect(Collectors.toList());
     }
 }

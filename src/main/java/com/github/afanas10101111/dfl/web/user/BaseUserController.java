@@ -15,11 +15,11 @@ abstract class BaseUserController {
     protected UserService service;
 
     @Autowired
-    protected ModelMapper mapper;
+    private ModelMapper mapper;
 
     public void update(long id, UserTo userTo) {
         log.info("update with id = {}, set {}", id, userTo);
-        User updatedFromTo = mapper.map(userTo, User.class);
+        User updatedFromTo = getFromTo(userTo);
         ValidationUtil.checkIdConsistent(id, updatedFromTo);
         service.update(updatedFromTo);
     }
@@ -32,5 +32,9 @@ abstract class BaseUserController {
     public User get(long id) {
         log.info("get with id = {}", id);
         return service.get(id);
+    }
+
+    protected User getFromTo(UserTo to) {
+        return mapper.map(to, User.class);
     }
 }

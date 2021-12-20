@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = RestaurantForUserController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
-public class RestaurantForUserController extends BaseRestaurantController {
+@RequestMapping(value = ForUserController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
+public class ForUserController extends BaseRestaurantController {
     public static final String URL = "/restaurants";
     public static final String WITH_MEALS_SUFFIX = "/with-meals";
 

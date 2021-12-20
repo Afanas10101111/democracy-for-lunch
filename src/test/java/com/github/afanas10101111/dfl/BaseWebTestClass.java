@@ -63,4 +63,31 @@ public abstract class BaseWebTestClass extends BaseServiceTestClass {
     protected MvcResult getGetResult(String url) throws Exception {
         return getGetResult(url, null);
     }
+
+    protected MvcResult getPostResult(String url, Object body) throws Exception {
+        return mockMvc.perform(
+                MockMvcRequestBuilders.post(url)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(body))
+        )
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andReturn();
+    }
+
+    protected void performPut(String url, Object body) throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.put(url)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(body))
+        )
+                .andDo(print())
+                .andExpect(status().isNoContent());
+    }
+
+    protected void performDelete(String url) throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete(url))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+    }
 }

@@ -14,7 +14,7 @@ public class RestaurantTestUtil {
     public static final MatcherFactory.Matcher<RestaurantTo> RESTAURANT_TO_MATCHER = MatcherFactory.createWithFieldsToIgnore("meals");
     public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_WITH_MEALS_MATCHER = MatcherFactory.createWithFieldsToIgnore("meals.date", "meals.restaurant");
     public static final MatcherFactory.Matcher<RestaurantTo> RESTAURANT_TO_WITH_MEALS_MATCHER = MatcherFactory.createWithFieldsToIgnore("");
-    public static final MatcherFactory.Matcher<Meal> MEALS_MATCHER = MatcherFactory.createWithFieldsToIgnore("date", "restaurant");
+    public static final MatcherFactory.Matcher<Meal> MEAL_MATCHER = MatcherFactory.createWithFieldsToIgnore("date", "restaurant");
 
     public static final LocalDate NOW = LocalDate.now();
 
@@ -32,7 +32,8 @@ public class RestaurantTestUtil {
     public static final long SUNDERS_WINGS_ID = 100011;
     public static final long BIG_BASKET_ID = 100012;
     public static final long MEGA_SANDWICH_ID = 100013;
-    public static final long NEW_PIE_ID = 100014;
+    public static final long AA_NEW_PIE_ID = 100014;
+    public static final long AB_NEW_PIE_ID = 100015;
 
     public static final Meal hamburger = new Meal("hamburger", 50.00);
     public static final Meal cheeseburger = new Meal("cheeseburger", 60.00);
@@ -42,7 +43,8 @@ public class RestaurantTestUtil {
     public static final Meal sundersWings = new Meal("sunders wings", 90.00);
     public static final Meal bigBasket = new Meal("big basket", 190.00);
     public static final Meal megaSandwich = new Meal("mega sandwich", 100.00);
-    public static final Meal aNewPie = new Meal("aNewPie", 88.88);
+    public static final Meal aaNewPie = new Meal("aaNewPie", 88.88);
+    public static final Meal abNewPie = new Meal("abNewPie", 99.99);
 
     public static final Restaurant mcDonalds = new Restaurant("McDonalds", "Moscow", List.of(bigMak, cheeseburger, hamburger));
     public static final Restaurant burgerKing = new Restaurant("BurgerKing", "Moscow", List.of(kingBurger, kingBurgerRoyal));
@@ -50,6 +52,7 @@ public class RestaurantTestUtil {
     public static final Restaurant subWay = new Restaurant("SubWay", "Москва", List.of(megaSandwich));
 
     public static final List<Restaurant> all = List.of(burgerKing, kfc, mcDonalds, subWay);
+    public static final List<RestaurantTo> allTos;
     public static final List<Restaurant> allWithActualMenu = List.of(burgerKing, kfc, mcDonalds);
     public static final List<RestaurantTo> allTosWithActualMenu;
 
@@ -62,15 +65,19 @@ public class RestaurantTestUtil {
         sundersWings.setId(SUNDERS_WINGS_ID);
         bigBasket.setId(BIG_BASKET_ID);
         megaSandwich.setId(MEGA_SANDWICH_ID);
-        aNewPie.setId(NEW_PIE_ID);
+        aaNewPie.setId(AA_NEW_PIE_ID);
+        abNewPie.setId(AB_NEW_PIE_ID);
 
         mcDonalds.setId(MC_DONALDS_ID);
         burgerKing.setId(BURGER_KING_ID);
         kfc.setId(KFC_ID);
         subWay.setId(SUB_WAY_ID);
 
-        allTosWithActualMenu = allWithActualMenu.stream()
+        allTos = all.stream()
                 .map(RestaurantTestUtil::getTo)
+                .collect(Collectors.toList());
+        allTosWithActualMenu = allWithActualMenu.stream()
+                .map(RestaurantTestUtil::getToWithMeals)
                 .collect(Collectors.toList());
     }
 
@@ -85,10 +92,10 @@ public class RestaurantTestUtil {
     }
 
     public static List<Meal> getNewMeals() {
-        return List.of(new Meal(aNewPie.getName(), aNewPie.getPrice()));
+        return List.of(new Meal(aaNewPie.getName(), aaNewPie.getPrice()));
     }
 
-    public static RestaurantTo getTo(Restaurant restaurant) {
+    public static RestaurantTo getToWithMeals(Restaurant restaurant) {
         return new RestaurantTo(
                 restaurant.id(),
                 restaurant.getName(),
@@ -97,6 +104,16 @@ public class RestaurantTestUtil {
                 restaurant.getMeals().stream()
                         .map(RestaurantTestUtil::getMealTo)
                         .collect(Collectors.toSet())
+        );
+    }
+
+    public static RestaurantTo getTo(Restaurant restaurant) {
+        return new RestaurantTo(
+                restaurant.getId(),
+                restaurant.getName(),
+                restaurant.getAddress(),
+                restaurant.getVoices(),
+                null
         );
     }
 

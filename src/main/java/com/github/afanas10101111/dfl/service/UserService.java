@@ -10,6 +10,8 @@ import org.springframework.util.Assert;
 import javax.transaction.Transactional;
 import java.util.List;
 
+import static com.github.afanas10101111.dfl.util.UserUtil.prepareToSave;
+
 @RequiredArgsConstructor
 @Component
 public class UserService {
@@ -19,7 +21,7 @@ public class UserService {
 
     public User create(User user) {
         Assert.notNull(user, ASSERT_MESSAGE);
-        return repository.save(user);
+        return repository.save(prepareToSave(user));
     }
 
     @Transactional
@@ -34,6 +36,8 @@ public class UserService {
         userFromDb.setVoteDate(user.getVoteDate());
         userFromDb.setVotedForId(user.getVotedForId());
         userFromDb.setRoles(user.getRoles());
+
+        prepareToSave(userFromDb);
     }
 
     public void enable(long id, boolean enable) {
