@@ -7,14 +7,14 @@ import com.github.afanas10101111.dfl.exception.NotFoundException;
 import com.github.afanas10101111.dfl.exception.TooLateToVoteException;
 import com.github.afanas10101111.dfl.model.User;
 import com.github.afanas10101111.dfl.repository.UserRepository;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -31,32 +31,26 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
 
+@SpringJUnitConfig(classes = VoteServiceTest.ClockMockConfig.class)
 @ExtendWith(MockitoExtension.class)
 class VoteServiceTest extends BaseServiceTestClass {
     private static final LocalDateTime CORRECT_TIME = LocalDateTime.of(NOW, LocalTime.of(10, 59));
     private static final LocalDateTime INCORRECT_TIME = LocalDateTime.of(NOW, LocalTime.of(11, 0));
     private static final LocalDateTime INCORRECT_DATE = LocalDateTime.of(NOW.plusDays(1), LocalTime.of(10, 0));
 
-    @InjectMocks
+    @Autowired
     private VoteService voteService;
 
     @Autowired
     private UserRepository userRepository;
 
-    @Mock
-    private Clock clock;
-
     @Autowired
-    @Spy
-    private UserService userService;
-
-    @Autowired
-    @Spy
     private RestaurantService restaurantService;
 
-    // TODO deal with mock for transactional class
+    @Autowired
+    private Clock clock;
+
     @Test
-    @Disabled
     void voteAndRevote() {
         setClock(CORRECT_TIME);
         voteService.vote(USER_ID, MC_DONALDS_ID);
@@ -87,7 +81,6 @@ class VoteServiceTest extends BaseServiceTestClass {
     }
 
     @Test
-    @Disabled
     void voteToLate() {
         setClock(INCORRECT_TIME);
         voteService.vote(USER_ID, MC_DONALDS_ID);
@@ -110,5 +103,14 @@ class VoteServiceTest extends BaseServiceTestClass {
         Clock fixedClock = Clock.fixed(dateTime.atZone(ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault());
         doReturn(fixedClock.instant()).when(clock).instant();
         doReturn(fixedClock.getZone()).when(clock).getZone();
+    }
+
+    @Configuration
+    static class ClockMockConfig {
+
+        @Bean
+        public Clock clock() {
+            return Mockito.mock(Clock.class);
+        }
     }
 }
