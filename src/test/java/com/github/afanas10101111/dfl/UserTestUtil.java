@@ -12,6 +12,8 @@ import static com.github.afanas10101111.dfl.RestaurantTestUtil.MC_DONALDS_ID;
 
 public class UserTestUtil {
     public static final MatcherFactory.Matcher<User> USER_MATCHER = MatcherFactory.createWithFieldsToIgnore("registered");
+    public static final MatcherFactory.Matcher<User> USER_MATCHER_FOR_PASSWORDLESS_FROM_TOS
+            = MatcherFactory.createWithFieldsToIgnore("registered", "password");
 
     public static final long ADMIN_ID = 100000;
     public static final long USER_ID = 100001;
@@ -29,11 +31,11 @@ public class UserTestUtil {
     }
 
     public static User getNew() {
-        return new User("New", "new@new.com", "1234", true, Set.of(Role.USER));
+        return new User("New", "new@new.com", "12345", true, Set.of(Role.USER));
     }
 
     public static User getUpdated() {
-        User updated = new User("Updated", "up@up.up", "4321", false, Set.of(Role.USER, Role.ADMIN));
+        User updated = new User("Updated", "up@up.up", "54321", false, Set.of(Role.USER, Role.ADMIN));
         updated.setId(USER_ID);
         return updated;
     }
@@ -45,8 +47,6 @@ public class UserTestUtil {
                 user.getEmail(),
                 user.getPassword(),
                 user.isEnabled(),
-                null,
-                null,
                 user.getRoles()
         );
     }

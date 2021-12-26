@@ -1,5 +1,7 @@
 package com.github.afanas10101111.dfl;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.afanas10101111.dfl.config.WebConfig;
 import com.github.afanas10101111.dfl.service.RestaurantService;
@@ -26,8 +28,6 @@ public abstract class BaseWebTestClass extends BaseServiceTestClass {
     private static final CharacterEncodingFilter CHARACTER_ENCODING_FILTER = new CharacterEncodingFilter();
 
     protected MockMvc mockMvc;
-
-    @Autowired
     protected ObjectMapper mapper;
 
     @Autowired
@@ -50,6 +50,8 @@ public abstract class BaseWebTestClass extends BaseServiceTestClass {
                 .webAppContextSetup(webApplicationContext)
                 .addFilter(CHARACTER_ENCODING_FILTER)
                 .build();
+        mapper = new ObjectMapper();
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
     }
 
     protected MvcResult getGetResult(String url, MultiValueMap<String, String> params) throws Exception {
@@ -89,5 +91,15 @@ public abstract class BaseWebTestClass extends BaseServiceTestClass {
         mockMvc.perform(MockMvcRequestBuilders.delete(url))
                 .andDo(print())
                 .andExpect(status().isNoContent());
+    }
+
+    protected void checkValidation(String url, Object invalid) throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.post(url)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(invalid))
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 }

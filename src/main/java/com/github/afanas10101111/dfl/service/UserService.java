@@ -33,8 +33,6 @@ public class UserService {
         userFromDb.setEmail(user.getEmail());
         userFromDb.setPassword(user.getPassword());
         userFromDb.setEnabled(user.isEnabled());
-        userFromDb.setVoteDate(user.getVoteDate());
-        userFromDb.setVotedForId(user.getVotedForId());
         userFromDb.setRoles(user.getRoles());
 
         prepareToSave(userFromDb);

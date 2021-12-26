@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static com.github.afanas10101111.dfl.UserTestUtil.USER_ID;
 import static com.github.afanas10101111.dfl.UserTestUtil.USER_MATCHER;
+import static com.github.afanas10101111.dfl.UserTestUtil.USER_MATCHER_FOR_PASSWORDLESS_FROM_TOS;
 import static com.github.afanas10101111.dfl.UserTestUtil.getTo;
 import static com.github.afanas10101111.dfl.UserTestUtil.getUpdated;
 import static com.github.afanas10101111.dfl.UserTestUtil.user;
@@ -23,7 +24,7 @@ class ProfileControllerTest extends BaseWebTestClass {
 
     @Test
     void get() throws Exception {
-        USER_MATCHER.assertMatch(JsonTestUtil.readValue(mapper, getGetResult(URL), User.class), user);
+        USER_MATCHER_FOR_PASSWORDLESS_FROM_TOS.assertMatch(JsonTestUtil.readValue(mapper, getGetResult(URL), User.class), user);
     }
 
     @Test

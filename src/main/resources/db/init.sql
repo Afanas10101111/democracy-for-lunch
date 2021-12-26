@@ -41,7 +41,7 @@ CREATE TABLE meals
     id            BIGINT PRIMARY KEY DEFAULT nextval('global_seq'),
     restaurant_id BIGINT  NOT NULL,
     name          VARCHAR NOT NULL,
-    price         NUMERIC NOT NULL,
+    price         INTEGER NOT NULL,
     created       DATE    NOT NULL,
     CONSTRAINT restaurant_meal_idx UNIQUE (restaurant_id, name),
     FOREIGN KEY (restaurant_id) REFERENCES restaurants (id) ON DELETE CASCADE

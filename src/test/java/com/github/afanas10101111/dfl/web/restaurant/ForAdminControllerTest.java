@@ -2,10 +2,14 @@ package com.github.afanas10101111.dfl.web.restaurant;
 
 import com.github.afanas10101111.dfl.BaseWebTestClass;
 import com.github.afanas10101111.dfl.JsonTestUtil;
+import com.github.afanas10101111.dfl.dto.MealTo;
 import com.github.afanas10101111.dfl.dto.RestaurantTo;
 import com.github.afanas10101111.dfl.exception.NotFoundException;
+import com.github.afanas10101111.dfl.model.Restaurant;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
@@ -33,6 +37,8 @@ import static com.github.afanas10101111.dfl.web.restaurant.ForAdminController.UR
 import static com.github.afanas10101111.dfl.web.restaurant.ForAdminController.WITH_MEALS_SUFFIX;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class ForAdminControllerTest extends BaseWebTestClass {
     private static final char SLASH = '/';
@@ -98,10 +104,52 @@ class ForAdminControllerTest extends BaseWebTestClass {
     }
 
     @Test
-    void getAllWithMealsByDate() throws Exception {
+    void getAllWithMealsUpToDate() throws Exception {
         RESTAURANT_TO_WITH_MEALS_MATCHER.assertMatch(
                 JsonTestUtil.readValues(mapper, getGetResult(URL + WITH_MEALS_SUFFIX), RestaurantTo.class),
                 allTosWithActualMenu
         );
+    }
+
+    @Test
+    void createNotValid() throws Exception {
+        Restaurant invalid = getNew();
+        invalid.setName("a");
+        checkValidation(URL, getTo(invalid));
+    }
+
+    @Test
+    void addNotValidMeals() throws Exception {
+        MealTo invalid = getMealTo(aaNewPie);
+        invalid.setPrice(99);
+        mockMvc.perform(
+                MockMvcRequestBuilders.put(URL + SLASH + MC_DONALDS_ID + MEALS_SUFFIX)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(invalid))
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void checkMinimalisticRequest() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.post(URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"aa\",\"address\":\"Neq York\"}")
+        )
+                .andDo(print())
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    void checkRequestWithUnknownFields() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.post(URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"aa\",\"address\":\"Neq York\",\"unknown\":\"field\"}")
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 }

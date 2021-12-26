@@ -35,16 +35,16 @@ public class RestaurantTestUtil {
     public static final long AA_NEW_PIE_ID = 100014;
     public static final long AB_NEW_PIE_ID = 100015;
 
-    public static final Meal hamburger = new Meal("hamburger", 50.00);
-    public static final Meal cheeseburger = new Meal("cheeseburger", 60.00);
-    public static final Meal bigMak = new Meal("big mak", 160.00);
-    public static final Meal kingBurger = new Meal("king burger", 80.00);
-    public static final Meal kingBurgerRoyal = new Meal("king burger royal", 180.00);
-    public static final Meal sundersWings = new Meal("sunders wings", 90.00);
-    public static final Meal bigBasket = new Meal("big basket", 190.00);
-    public static final Meal megaSandwich = new Meal("mega sandwich", 100.00);
-    public static final Meal aaNewPie = new Meal("aaNewPie", 88.88);
-    public static final Meal abNewPie = new Meal("abNewPie", 99.99);
+    public static final Meal hamburger = new Meal("hamburger", 5000);
+    public static final Meal cheeseburger = new Meal("cheeseburger", 6000);
+    public static final Meal bigMak = new Meal("big mak", 16000);
+    public static final Meal kingBurger = new Meal("king burger", 8000);
+    public static final Meal kingBurgerRoyal = new Meal("king burger royal", 18000);
+    public static final Meal sundersWings = new Meal("sunders wings", 9000);
+    public static final Meal bigBasket = new Meal("big basket", 19000);
+    public static final Meal megaSandwich = new Meal("mega sandwich", 10000);
+    public static final Meal aaNewPie = new Meal("aaNewPie", 8888);
+    public static final Meal abNewPie = new Meal("abNewPie", 9999);
 
     public static final Restaurant mcDonalds = new Restaurant("McDonalds", "Moscow", List.of(bigMak, cheeseburger, hamburger));
     public static final Restaurant burgerKing = new Restaurant("BurgerKing", "Moscow", List.of(kingBurger, kingBurgerRoyal));

@@ -2,6 +2,7 @@ package com.github.afanas10101111.dfl.web.user;
 
 import com.github.afanas10101111.dfl.BaseWebTestClass;
 import com.github.afanas10101111.dfl.JsonTestUtil;
+import com.github.afanas10101111.dfl.dto.UserTo;
 import com.github.afanas10101111.dfl.exception.NotFoundException;
 import com.github.afanas10101111.dfl.model.User;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import org.springframework.util.MultiValueMap;
 
 import static com.github.afanas10101111.dfl.UserTestUtil.USER_ID;
 import static com.github.afanas10101111.dfl.UserTestUtil.USER_MATCHER;
+import static com.github.afanas10101111.dfl.UserTestUtil.USER_MATCHER_FOR_PASSWORDLESS_FROM_TOS;
 import static com.github.afanas10101111.dfl.UserTestUtil.all;
 import static com.github.afanas10101111.dfl.UserTestUtil.getNew;
 import static com.github.afanas10101111.dfl.UserTestUtil.getTo;
@@ -29,19 +31,25 @@ class AdminControllerTest extends BaseWebTestClass {
 
     @Test
     void getAll() throws Exception {
-        USER_MATCHER.assertMatch(JsonTestUtil.readValues(mapper, getGetResult(URL), User.class), all);
+        USER_MATCHER_FOR_PASSWORDLESS_FROM_TOS.assertMatch(
+                JsonTestUtil.readValues(mapper, getGetResult(URL), User.class), all
+        );
     }
 
     @Test
     void get() throws Exception {
-        USER_MATCHER.assertMatch(JsonTestUtil.readValue(mapper, getGetResult(URL + USER_ID), User.class), user);
+        USER_MATCHER_FOR_PASSWORDLESS_FROM_TOS.assertMatch(
+                JsonTestUtil.readValue(mapper, getGetResult(URL + USER_ID), User.class), user
+        );
     }
 
     @Test
     void getByEmail() throws Exception {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("email", "user@yandex.ru");
-        USER_MATCHER.assertMatch(JsonTestUtil.readValue(mapper, getGetResult(URL + "by-email", params), User.class), user);
+        USER_MATCHER_FOR_PASSWORDLESS_FROM_TOS.assertMatch(
+                JsonTestUtil.readValue(mapper, getGetResult(URL + "by-email", params), User.class), user
+        );
     }
 
     @Test
@@ -72,6 +80,13 @@ class AdminControllerTest extends BaseWebTestClass {
         MvcResult result = getPostResult(URL, getTo(expected));
         User actual = JsonTestUtil.readValue(mapper, result, User.class);
         expected.setId(actual.getId());
-        USER_MATCHER.assertMatch(actual, expected);
+        USER_MATCHER_FOR_PASSWORDLESS_FROM_TOS.assertMatch(actual, expected);
+    }
+
+    @Test
+    void createNotValid() throws Exception {
+        UserTo invalid = getTo(getNew());
+        invalid.setEnabled(null);
+        checkValidation(URL, invalid);
     }
 }

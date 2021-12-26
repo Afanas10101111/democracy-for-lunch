@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,7 +35,7 @@ public class ForAdminController extends BaseRestaurantController {
     public static final String UP_TO_DATE_SUFFIX = "/up-to-date";
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestaurantTo> createWithLocation(@RequestBody RestaurantTo restaurantTo) {
+    public ResponseEntity<RestaurantTo> createWithLocation(@Valid @RequestBody RestaurantTo restaurantTo) {
         log.info("createWithLocation (name = {})", restaurantTo.getName());
         Restaurant newFromTo = getFromTo(restaurantTo);
         ValidationUtil.checkNew(newFromTo);
@@ -44,7 +45,7 @@ public class ForAdminController extends BaseRestaurantController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable long id, @RequestBody RestaurantTo restaurantTo) {
+    public void update(@PathVariable long id, @Valid @RequestBody RestaurantTo restaurantTo) {
         log.info("update with id = {}, set {}", id, restaurantTo);
         Restaurant updatedFromTo = getFromTo(restaurantTo);
         ValidationUtil.checkIdConsistent(id, updatedFromTo);
@@ -53,7 +54,7 @@ public class ForAdminController extends BaseRestaurantController {
 
     @PutMapping(value = "/{id}" + MEALS_SUFFIX, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateMeals(@PathVariable long id, @RequestBody List<MealTo> mealTos) {
+    public void updateMeals(@PathVariable long id, @Valid @RequestBody List<MealTo> mealTos) {
         log.info("updateMeals (quantity = {}) for restaurant with id = {}", mealTos.size(), id);
         List<Meal> meals = mealTos.stream()
                 .map(m -> mapper.map(m, Meal.class))

@@ -29,12 +29,16 @@ abstract class BaseUserController {
         service.delete(id);
     }
 
-    public User get(long id) {
+    public UserTo get(long id) {
         log.info("get with id = {}", id);
-        return service.get(id);
+        return getTo(service.get(id));
     }
 
     protected User getFromTo(UserTo to) {
         return mapper.map(to, User.class);
+    }
+
+    protected UserTo getTo(User user) {
+        return mapper.map(user, UserTo.class);
     }
 }

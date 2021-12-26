@@ -32,7 +32,6 @@ public class RestaurantService {
 
         restaurantFromDb.setName(restaurant.getName());
         restaurantFromDb.setAddress(restaurant.getAddress());
-        restaurantFromDb.setVoices(restaurant.getVoices());
     }
 
     @Transactional

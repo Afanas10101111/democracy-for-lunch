@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.github.afanas10101111.dfl.util.ControllerUtil.getUriOfNewResource;
 
@@ -29,18 +31,18 @@ public class AdminController extends BaseUserController {
     public static final String URL = "/admin/users";
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> createWithLocation(@RequestBody UserTo userTo) {
+    public ResponseEntity<UserTo> createWithLocation(@Valid @RequestBody UserTo userTo) {
         log.info("createWithLocation (mail = {})", userTo.getEmail());
         User newFromTo = getFromTo(userTo);
         ValidationUtil.checkNew(newFromTo);
         User created = service.create(newFromTo);
-        return ResponseEntity.created(getUriOfNewResource(created)).body(created);
+        return ResponseEntity.created(getUriOfNewResource(created)).body(getTo(created));
     }
 
     @Override
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable long id, @RequestBody UserTo userTo) {
+    public void update(@PathVariable long id, @Valid @RequestBody UserTo userTo) {
         super.update(id, userTo);
     }
 
@@ -60,19 +62,21 @@ public class AdminController extends BaseUserController {
 
     @Override
     @GetMapping("/{id}")
-    public User get(@PathVariable long id) {
+    public UserTo get(@PathVariable long id) {
         return super.get(id);
     }
 
     @GetMapping("/by-email")
-    public User getByEmail(String email) {
+    public UserTo getByEmail(String email) {
         log.info("getByEmail {}", email);
-        return service.getByEmail(email.toLowerCase());
+        return getTo(service.getByEmail(email.toLowerCase()));
     }
 
     @GetMapping
-    public List<User> getAll() {
+    public List<UserTo> getAll() {
         log.info("getAll");
-        return service.getAll();
+        return service.getAll().stream()
+                .map(this::getTo)
+                .collect(Collectors.toList());
     }
 }

@@ -42,7 +42,7 @@ class ForUserControllerTest extends BaseWebTestClass {
     }
 
     @Test
-    void getAllWithMealsByDate() throws Exception {
+    void getAllWithMealsUpToDate() throws Exception {
         RESTAURANT_TO_WITH_MEALS_MATCHER.assertMatch(
                 JsonTestUtil.readValues(mapper, getGetResult(URL + WITH_MEALS_SUFFIX), RestaurantTo.class),
                 allTosWithActualMenu

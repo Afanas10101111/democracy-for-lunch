@@ -1,7 +1,6 @@
 package com.github.afanas10101111.dfl.web.user;
 
 import com.github.afanas10101111.dfl.dto.UserTo;
-import com.github.afanas10101111.dfl.model.User;
 import com.github.afanas10101111.dfl.web.security.SecurityUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(value = ProfileController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class ProfileController extends BaseUserController {
@@ -20,7 +21,7 @@ public class ProfileController extends BaseUserController {
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody UserTo userTo) {
+    public void update(@Valid @RequestBody UserTo userTo) {
         super.update(SecurityUtil.getAuthUserId(), userTo);
     }
 
@@ -31,7 +32,7 @@ public class ProfileController extends BaseUserController {
     }
 
     @GetMapping
-    public User get() {
+    public UserTo get() {
         return super.get(SecurityUtil.getAuthUserId());
     }
 }
