@@ -6,6 +6,7 @@ import com.github.afanas10101111.dfl.dto.UserTo;
 import com.github.afanas10101111.dfl.exception.NotFoundException;
 import com.github.afanas10101111.dfl.model.User;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.LinkedMultiValueMap;
@@ -88,5 +89,16 @@ class AdminControllerTest extends BaseWebTestClass {
         UserTo invalid = getTo(getNew());
         invalid.setEnabled(null);
         checkValidation(URL, invalid);
+    }
+
+    @Test
+    void checkMinimalisticRequest() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.post(URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"New\",\"email\":\"new@new.com\",\"password\":\"12345\",\"enabled\":true,\"roles\":[\"USER\"]}")
+        )
+                .andDo(print())
+                .andExpect(status().isCreated());
     }
 }

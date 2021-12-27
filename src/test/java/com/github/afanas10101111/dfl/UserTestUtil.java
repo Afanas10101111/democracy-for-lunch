@@ -46,6 +46,7 @@ public class UserTestUtil {
                 user.getName(),
                 user.getEmail(),
                 user.getPassword(),
+                user.getRegistered(),
                 user.isEnabled(),
                 user.getRoles()
         );
