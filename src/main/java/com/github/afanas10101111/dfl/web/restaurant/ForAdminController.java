@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +29,7 @@ import static com.github.afanas10101111.dfl.util.ControllerUtil.getUriOfNewResou
 @Slf4j
 @RestController
 @RequestMapping(value = ForAdminController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@PreAuthorize("hasRole('ADMIN')")
 public class ForAdminController extends BaseRestaurantController {
     public static final String URL = "/admin/restaurants";
     public static final String MEALS_SUFFIX = "/meals";

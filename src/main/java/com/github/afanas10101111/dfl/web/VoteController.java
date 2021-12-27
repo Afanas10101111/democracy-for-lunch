@@ -1,11 +1,12 @@
 package com.github.afanas10101111.dfl.web;
 
 import com.github.afanas10101111.dfl.service.VoteService;
-import com.github.afanas10101111.dfl.web.security.SecurityUtil;
+import com.github.afanas10101111.dfl.web.security.AuthorizedUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -22,8 +23,8 @@ public class VoteController {
 
     @PatchMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void vote(long restaurantId) {
-        long userId = SecurityUtil.getAuthUserId();
+    public void vote(@AuthenticationPrincipal AuthorizedUser authUser, long restaurantId) {
+        long userId = authUser.getId();
         log.info("User with id = {} voted for restaurant with id = {}", userId, restaurantId);
         service.vote(userId, restaurantId);
     }

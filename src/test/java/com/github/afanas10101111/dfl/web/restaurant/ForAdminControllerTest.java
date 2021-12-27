@@ -8,6 +8,7 @@ import com.github.afanas10101111.dfl.exception.NotFoundException;
 import com.github.afanas10101111.dfl.model.Restaurant;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -31,6 +32,7 @@ import static com.github.afanas10101111.dfl.RestaurantTestUtil.getToWithMeals;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.getUpdated;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.hamburger;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.mcDonalds;
+import static com.github.afanas10101111.dfl.UserTestUtil.admin;
 import static com.github.afanas10101111.dfl.web.restaurant.ForAdminController.MEALS_SUFFIX;
 import static com.github.afanas10101111.dfl.web.restaurant.ForAdminController.UP_TO_DATE_SUFFIX;
 import static com.github.afanas10101111.dfl.web.restaurant.ForAdminController.URL;
@@ -124,6 +126,7 @@ class ForAdminControllerTest extends BaseWebTestClass {
         invalid.setPrice(99);
         mockMvc.perform(
                 MockMvcRequestBuilders.put(URL + SLASH + MC_DONALDS_ID + MEALS_SUFFIX)
+                        .with(SecurityMockMvcRequestPostProcessors.httpBasic(admin.getEmail(), admin.getPassword()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(invalid))
         )
@@ -135,6 +138,7 @@ class ForAdminControllerTest extends BaseWebTestClass {
     void checkMinimalisticRequest() throws Exception {
         mockMvc.perform(
                 MockMvcRequestBuilders.post(URL)
+                        .with(SecurityMockMvcRequestPostProcessors.httpBasic(admin.getEmail(), admin.getPassword()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"aa\",\"address\":\"Neq York\"}")
         )
@@ -146,6 +150,7 @@ class ForAdminControllerTest extends BaseWebTestClass {
     void checkRequestWithUnknownFields() throws Exception {
         mockMvc.perform(
                 MockMvcRequestBuilders.post(URL)
+                        .with(SecurityMockMvcRequestPostProcessors.httpBasic(admin.getEmail(), admin.getPassword()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"aa\",\"address\":\"Neq York\",\"unknown\":\"field\"}")
         )

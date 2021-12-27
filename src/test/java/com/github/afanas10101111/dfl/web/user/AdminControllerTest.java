@@ -7,6 +7,7 @@ import com.github.afanas10101111.dfl.exception.NotFoundException;
 import com.github.afanas10101111.dfl.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.LinkedMultiValueMap;
@@ -14,7 +15,7 @@ import org.springframework.util.MultiValueMap;
 
 import static com.github.afanas10101111.dfl.UserTestUtil.USER_ID;
 import static com.github.afanas10101111.dfl.UserTestUtil.USER_MATCHER;
-import static com.github.afanas10101111.dfl.UserTestUtil.USER_MATCHER_FOR_PASSWORDLESS_FROM_TOS;
+import static com.github.afanas10101111.dfl.UserTestUtil.admin;
 import static com.github.afanas10101111.dfl.UserTestUtil.all;
 import static com.github.afanas10101111.dfl.UserTestUtil.getNew;
 import static com.github.afanas10101111.dfl.UserTestUtil.getTo;
@@ -32,14 +33,14 @@ class AdminControllerTest extends BaseWebTestClass {
 
     @Test
     void getAll() throws Exception {
-        USER_MATCHER_FOR_PASSWORDLESS_FROM_TOS.assertMatch(
+        USER_MATCHER.assertMatch(
                 JsonTestUtil.readValues(mapper, getGetResult(URL), User.class), all
         );
     }
 
     @Test
     void get() throws Exception {
-        USER_MATCHER_FOR_PASSWORDLESS_FROM_TOS.assertMatch(
+        USER_MATCHER.assertMatch(
                 JsonTestUtil.readValue(mapper, getGetResult(URL + USER_ID), User.class), user
         );
     }
@@ -48,7 +49,7 @@ class AdminControllerTest extends BaseWebTestClass {
     void getByEmail() throws Exception {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("email", "user@yandex.ru");
-        USER_MATCHER_FOR_PASSWORDLESS_FROM_TOS.assertMatch(
+        USER_MATCHER.assertMatch(
                 JsonTestUtil.readValue(mapper, getGetResult(URL + "by-email", params), User.class), user
         );
     }
@@ -63,7 +64,11 @@ class AdminControllerTest extends BaseWebTestClass {
     @Test
     void enable() throws Exception {
         assertTrue(userService.get(USER_ID).isEnabled());
-        mockMvc.perform(MockMvcRequestBuilders.patch(URL + USER_ID).param("enable", "false"))
+        mockMvc.perform(
+                MockMvcRequestBuilders.patch(URL + USER_ID)
+                        .with(SecurityMockMvcRequestPostProcessors.httpBasic(admin.getEmail(), admin.getPassword()))
+                        .param("enable", "false")
+        )
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertFalse(userService.get(USER_ID).isEnabled());
@@ -81,7 +86,7 @@ class AdminControllerTest extends BaseWebTestClass {
         MvcResult result = getPostResult(URL, getTo(expected));
         User actual = JsonTestUtil.readValue(mapper, result, User.class);
         expected.setId(actual.getId());
-        USER_MATCHER_FOR_PASSWORDLESS_FROM_TOS.assertMatch(actual, expected);
+        USER_MATCHER.assertMatch(actual, expected);
     }
 
     @Test
@@ -95,10 +100,17 @@ class AdminControllerTest extends BaseWebTestClass {
     void checkMinimalisticRequest() throws Exception {
         mockMvc.perform(
                 MockMvcRequestBuilders.post(URL)
+                        .with(SecurityMockMvcRequestPostProcessors.httpBasic(admin.getEmail(), admin.getPassword()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"New\",\"email\":\"new@new.com\",\"password\":\"12345\",\"enabled\":true,\"roles\":[\"USER\"]}")
         )
                 .andDo(print())
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    void getUnAuth() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(URL))
+                .andExpect(status().isUnauthorized());
     }
 }

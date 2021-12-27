@@ -6,11 +6,12 @@ import com.github.afanas10101111.dfl.exception.NotFoundException;
 import com.github.afanas10101111.dfl.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static com.github.afanas10101111.dfl.UserTestUtil.USER_ID;
 import static com.github.afanas10101111.dfl.UserTestUtil.USER_MATCHER;
-import static com.github.afanas10101111.dfl.UserTestUtil.USER_MATCHER_FOR_PASSWORDLESS_FROM_TOS;
+import static com.github.afanas10101111.dfl.UserTestUtil.admin;
 import static com.github.afanas10101111.dfl.UserTestUtil.getTo;
 import static com.github.afanas10101111.dfl.UserTestUtil.getUpdated;
 import static com.github.afanas10101111.dfl.UserTestUtil.user;
@@ -24,13 +25,16 @@ class ProfileControllerTest extends BaseWebTestClass {
 
     @Test
     void get() throws Exception {
-        USER_MATCHER_FOR_PASSWORDLESS_FROM_TOS.assertMatch(JsonTestUtil.readValue(mapper, getGetResult(URL), User.class), user);
+        USER_MATCHER.assertMatch(JsonTestUtil.readValue(mapper, getGetResult(URL), User.class), admin);
     }
 
     @Test
     void delete() throws Exception {
         assertDoesNotThrow(() -> userService.get(USER_ID));
-        mockMvc.perform(MockMvcRequestBuilders.delete(URL))
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete(URL)
+                        .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail(), user.getPassword()))
+        )
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertThrows(NotFoundException.class, () -> userService.get(USER_ID));
@@ -40,6 +44,7 @@ class ProfileControllerTest extends BaseWebTestClass {
     void update() throws Exception {
         mockMvc.perform(
                 MockMvcRequestBuilders.put(URL)
+                        .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail(), user.getPassword()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(getTo(getUpdated())))
         )

@@ -34,8 +34,6 @@ public class UserService {
         userFromDb.setPassword(user.getPassword());
         userFromDb.setEnabled(user.isEnabled());
         userFromDb.setRoles(user.getRoles());
-
-        prepareToSave(userFromDb);
     }
 
     public void enable(long id, boolean enable) {

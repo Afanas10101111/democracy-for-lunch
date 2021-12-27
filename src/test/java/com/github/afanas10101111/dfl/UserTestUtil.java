@@ -11,8 +11,7 @@ import java.util.Set;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.MC_DONALDS_ID;
 
 public class UserTestUtil {
-    public static final MatcherFactory.Matcher<User> USER_MATCHER = MatcherFactory.createWithFieldsToIgnore("registered");
-    public static final MatcherFactory.Matcher<User> USER_MATCHER_FOR_PASSWORDLESS_FROM_TOS
+    public static final MatcherFactory.Matcher<User> USER_MATCHER
             = MatcherFactory.createWithFieldsToIgnore("registered", "password");
 
     public static final long ADMIN_ID = 100000;
@@ -21,7 +20,7 @@ public class UserTestUtil {
     public static final String NA_EMAIL = "someEmail@email.me";
 
     public static final User admin = new User("Admin", "admin@gmail.com", "admin", true, Set.of(Role.USER, Role.ADMIN));
-    public static final User user = new User("Юзер", "user@yandex.ru", "password", true, Set.of(Role.USER));
+    public static final User user = new User("Юзер", "user@yandex.ru", "user", true, Set.of(Role.USER));
 
     public static final List<User> all = List.of(admin, user);
 
