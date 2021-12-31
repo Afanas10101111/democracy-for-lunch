@@ -7,6 +7,9 @@ import com.github.afanas10101111.dfl.util.ValidationUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+
+import static com.github.afanas10101111.dfl.util.ControllerUtil.getUriOfNewResource;
 
 @Slf4j
 abstract class BaseUserController {
@@ -16,6 +19,13 @@ abstract class BaseUserController {
 
     @Autowired
     private ModelMapper mapper;
+
+    public ResponseEntity<UserTo> createWithLocation(UserTo userTo) {
+        User newFromTo = getFromTo(userTo);
+        ValidationUtil.checkNew(newFromTo);
+        User created = service.create(newFromTo);
+        return ResponseEntity.created(getUriOfNewResource(created)).body(getTo(created));
+    }
 
     public void update(long id, UserTo userTo) {
         log.info("update with id = {}, set {}", id, userTo);

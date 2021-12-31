@@ -2,6 +2,7 @@ package com.github.afanas10101111.dfl.web.user;
 
 import com.github.afanas10101111.dfl.dto.UserTo;
 import com.github.afanas10101111.dfl.web.security.AuthorizedUser;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+@Slf4j
 @RestController
 @RequestMapping(value = ProfileController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @PreAuthorize("hasRole('USER')")
@@ -25,17 +27,23 @@ public class ProfileController extends BaseUserController {
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@AuthenticationPrincipal AuthorizedUser authUser, @Valid @RequestBody UserTo userTo) {
-        super.update(authUser.getId(), userTo);
+        long id = authUser.getId();
+        log.info("update user with id = {}, to {}", id, userTo);
+        super.update(id, userTo);
     }
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal AuthorizedUser authUser) {
-        super.delete(authUser.getId());
+        long id = authUser.getId();
+        log.info("delete user with id = {}", id);
+        super.delete(id);
     }
 
     @GetMapping
     public UserTo get(@AuthenticationPrincipal AuthorizedUser authUser) {
-        return super.get(authUser.getId());
+        long id = authUser.getId();
+        log.info("get user with id = {}", id);
+        return super.get(id);
     }
 }

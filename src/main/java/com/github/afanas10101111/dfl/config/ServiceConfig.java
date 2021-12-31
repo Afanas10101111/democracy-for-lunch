@@ -11,7 +11,7 @@ import java.time.Clock;
 public class ServiceConfig {
 
     @Bean
-    public Clock clock() {
+    Clock clock() {
         return Clock.systemDefaultZone();
     }
 }

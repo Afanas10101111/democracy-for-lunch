@@ -1,8 +1,6 @@
 package com.github.afanas10101111.dfl.web.user;
 
 import com.github.afanas10101111.dfl.dto.UserTo;
-import com.github.afanas10101111.dfl.model.User;
-import com.github.afanas10101111.dfl.util.ValidationUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,8 +21,6 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.github.afanas10101111.dfl.util.ControllerUtil.getUriOfNewResource;
-
 @Slf4j
 @RestController
 @RequestMapping(value = AdminController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -32,13 +28,12 @@ import static com.github.afanas10101111.dfl.util.ControllerUtil.getUriOfNewResou
 public class AdminController extends BaseUserController {
     public static final String URL = "/admin/users";
 
+    @Override
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<UserTo> createWithLocation(@Valid @RequestBody UserTo userTo) {
         log.info("createWithLocation (mail = {})", userTo.getEmail());
-        User newFromTo = getFromTo(userTo);
-        ValidationUtil.checkNew(newFromTo);
-        User created = service.create(newFromTo);
-        return ResponseEntity.created(getUriOfNewResource(created)).body(getTo(created));
+        return super.createWithLocation(userTo);
     }
 
     @Override

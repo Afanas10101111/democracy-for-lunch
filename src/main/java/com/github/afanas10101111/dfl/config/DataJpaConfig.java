@@ -59,7 +59,7 @@ public class DataJpaConfig {
     private Boolean hibernateShowSql;
 
     @Bean
-    public DataSource dataSource() throws IOException {
+    DataSource dataSource() throws IOException {
         org.apache.tomcat.jdbc.pool.DataSource dataSource = new org.apache.tomcat.jdbc.pool.DataSource();
         dataSource.setDriverClassName(jdbcDriverClassName);
         dataSource.setUrl(jdbcUrl);
@@ -74,7 +74,7 @@ public class DataJpaConfig {
     }
 
     @Bean
-    public EntityManagerFactory entityManagerFactory(DataSource dataSource) {
+    EntityManagerFactory entityManagerFactory(DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
         factoryBean.setDataSource(dataSource);
         factoryBean.setPackagesToScan("com.github.afanas10101111.dfl.model");
@@ -94,7 +94,7 @@ public class DataJpaConfig {
     }
 
     @Bean
-    public TransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+    TransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);
     }
 }

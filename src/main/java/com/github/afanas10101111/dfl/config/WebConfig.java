@@ -37,12 +37,12 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public ObjectMapper objectMapper() {
+    ObjectMapper objectMapper() {
         return getObjectMapper();
     }
 
     @Bean
-    public ModelMapper modelMapper() {
+    ModelMapper modelMapper() {
         ModelMapper mapper = new ModelMapper();
         mapper.addMappings(new PropertyMap<UserTo, User>() {
             @Override
