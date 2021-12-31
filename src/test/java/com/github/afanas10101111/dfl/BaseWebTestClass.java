@@ -95,6 +95,18 @@ public abstract class BaseWebTestClass extends BaseServiceTestClass {
                 .andExpect(status().isNoContent());
     }
 
+    protected MvcResult getBadPutResult(String url, Object body) throws Exception {
+        return mockMvc.perform(
+                MockMvcRequestBuilders.put(url)
+                        .with(SecurityMockMvcRequestPostProcessors.httpBasic(admin.getEmail(), admin.getPassword()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(body))
+        )
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andReturn();
+    }
+
     protected void performDelete(String url) throws Exception {
         mockMvc.perform(
                 MockMvcRequestBuilders.delete(url)

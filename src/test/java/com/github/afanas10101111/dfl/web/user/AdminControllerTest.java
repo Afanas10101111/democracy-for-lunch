@@ -2,6 +2,7 @@ package com.github.afanas10101111.dfl.web.user;
 
 import com.github.afanas10101111.dfl.BaseWebTestClass;
 import com.github.afanas10101111.dfl.JsonTestUtil;
+import com.github.afanas10101111.dfl.dto.ErrorTo;
 import com.github.afanas10101111.dfl.dto.UserTo;
 import com.github.afanas10101111.dfl.exception.NotFoundException;
 import com.github.afanas10101111.dfl.model.User;
@@ -13,6 +14,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import static com.github.afanas10101111.dfl.ErrorTestUtil.illegalArgumentExceptionErrorTo;
+import static com.github.afanas10101111.dfl.ErrorTestUtil.notFoundExceptionErrorTo;
+import static com.github.afanas10101111.dfl.UserTestUtil.NA_ID;
 import static com.github.afanas10101111.dfl.UserTestUtil.USER_ID;
 import static com.github.afanas10101111.dfl.UserTestUtil.USER_MATCHER;
 import static com.github.afanas10101111.dfl.UserTestUtil.admin;
@@ -22,6 +26,7 @@ import static com.github.afanas10101111.dfl.UserTestUtil.getTo;
 import static com.github.afanas10101111.dfl.UserTestUtil.getUpdated;
 import static com.github.afanas10101111.dfl.UserTestUtil.user;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -112,5 +117,23 @@ class AdminControllerTest extends BaseWebTestClass {
     void getUnAuth() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get(URL))
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void handleNotFoundException() throws Exception {
+        User updated = getUpdated();
+        updated.setId(NA_ID);
+        MvcResult badPutResult = getBadPutResult(URL + NA_ID, getTo(updated));
+        ErrorTo errorTo = JsonTestUtil.readValue(mapper, badPutResult, ErrorTo.class);
+        assertEquals(notFoundExceptionErrorTo, errorTo);
+    }
+
+    @Test
+    void handleIllegalArgumentException() throws Exception {
+        User updated = getUpdated();
+        updated.setId(NA_ID);
+        MvcResult badPutResult = getBadPutResult(URL + USER_ID, getTo(updated));
+        ErrorTo errorTo = JsonTestUtil.readValue(mapper, badPutResult, ErrorTo.class);
+        assertEquals(illegalArgumentExceptionErrorTo, errorTo);
     }
 }

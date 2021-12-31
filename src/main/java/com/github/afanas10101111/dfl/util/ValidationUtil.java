@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class ValidationUtil {
     public static void checkNew(NamedEntity entity) {
         if (!entity.isNew()) {
-            throw new IllegalArgumentException(entity + " must be new");
+            throw new IllegalArgumentException(entity.getName() + " must be new");
         }
     }
 
@@ -18,7 +18,7 @@ public class ValidationUtil {
         if (entity.isNew()) {
             entity.setId(id);
         } else if (entity.id() != id) {
-            throw new IllegalArgumentException(entity + " must be with id = " + id);
+            throw new IllegalArgumentException(entity.getName() + " must be with id = " + id);
         }
     }
 
