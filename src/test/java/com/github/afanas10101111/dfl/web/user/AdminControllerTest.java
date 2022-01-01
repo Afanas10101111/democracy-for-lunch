@@ -16,6 +16,7 @@ import org.springframework.util.MultiValueMap;
 
 import static com.github.afanas10101111.dfl.ErrorTestUtil.illegalArgumentExceptionErrorTo;
 import static com.github.afanas10101111.dfl.ErrorTestUtil.notFoundExceptionErrorTo;
+import static com.github.afanas10101111.dfl.ErrorTestUtil.userBeanPropertyBindingResultErrorTo;
 import static com.github.afanas10101111.dfl.UserTestUtil.NA_ID;
 import static com.github.afanas10101111.dfl.UserTestUtil.USER_ID;
 import static com.github.afanas10101111.dfl.UserTestUtil.USER_MATCHER;
@@ -98,7 +99,7 @@ class AdminControllerTest extends BaseWebTestClass {
     void createNotValid() throws Exception {
         UserTo invalid = getTo(getNew());
         invalid.setEnabled(null);
-        checkValidation(URL, invalid);
+        checkValidation(URL, invalid, userBeanPropertyBindingResultErrorTo);
     }
 
     @Test

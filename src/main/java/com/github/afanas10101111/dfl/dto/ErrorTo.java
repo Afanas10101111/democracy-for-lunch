@@ -19,7 +19,8 @@ public class ErrorTo {
     public enum ErrorType {
         DATA_ACCESS(HttpStatus.NOT_FOUND),
         VOTING(HttpStatus.NOT_ACCEPTABLE),
-        COMMON(HttpStatus.INTERNAL_SERVER_ERROR);
+        BAD_REQUEST(HttpStatus.UNPROCESSABLE_ENTITY),
+        INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR);
 
         private final HttpStatus status;
     }

@@ -2,6 +2,7 @@ package com.github.afanas10101111.dfl.web.restaurant;
 
 import com.github.afanas10101111.dfl.BaseWebTestClass;
 import com.github.afanas10101111.dfl.JsonTestUtil;
+import com.github.afanas10101111.dfl.dto.ErrorTo;
 import com.github.afanas10101111.dfl.dto.MealTo;
 import com.github.afanas10101111.dfl.dto.RestaurantTo;
 import com.github.afanas10101111.dfl.exception.NotFoundException;
@@ -14,6 +15,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
+import static com.github.afanas10101111.dfl.ErrorTestUtil.restaurantBeanPropertyBindingResultErrorTo;
+import static com.github.afanas10101111.dfl.ErrorTestUtil.methodArgumentNotValidExceptionErrorTo;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.MC_DONALDS_ID;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.MEAL_MATCHER;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.RESTAURANT_MATCHER;
@@ -33,11 +36,13 @@ import static com.github.afanas10101111.dfl.RestaurantTestUtil.getUpdated;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.hamburger;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.mcDonalds;
 import static com.github.afanas10101111.dfl.UserTestUtil.admin;
+import static com.github.afanas10101111.dfl.dto.ErrorTo.ErrorType.BAD_REQUEST;
 import static com.github.afanas10101111.dfl.web.restaurant.ForAdminController.MEALS_SUFFIX;
 import static com.github.afanas10101111.dfl.web.restaurant.ForAdminController.UP_TO_DATE_SUFFIX;
 import static com.github.afanas10101111.dfl.web.restaurant.ForAdminController.URL;
 import static com.github.afanas10101111.dfl.web.restaurant.ForAdminController.WITH_MEALS_SUFFIX;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -117,21 +122,24 @@ class ForAdminControllerTest extends BaseWebTestClass {
     void createNotValid() throws Exception {
         Restaurant invalid = getNew();
         invalid.setName("a");
-        checkValidation(URL, getTo(invalid));
+        checkValidation(URL, getTo(invalid), restaurantBeanPropertyBindingResultErrorTo);
     }
 
     @Test
     void addNotValidMeals() throws Exception {
         MealTo invalid = getMealTo(aaNewPie);
         invalid.setPrice(99);
-        mockMvc.perform(
+        MvcResult result = mockMvc.perform(
                 MockMvcRequestBuilders.put(URL + SLASH + MC_DONALDS_ID + MEALS_SUFFIX)
                         .with(SecurityMockMvcRequestPostProcessors.httpBasic(admin.getEmail(), admin.getPassword()))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(invalid))
+                        .content(mapper.writeValueAsString(List.of(invalid)))
         )
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnprocessableEntity())
+                .andReturn();
+        ErrorTo errorTo = JsonTestUtil.readValue(mapper, result, ErrorTo.class);
+        assertEquals(methodArgumentNotValidExceptionErrorTo, errorTo);
     }
 
     @Test
@@ -148,13 +156,16 @@ class ForAdminControllerTest extends BaseWebTestClass {
 
     @Test
     void checkRequestWithUnknownFields() throws Exception {
-        mockMvc.perform(
+        MvcResult result = mockMvc.perform(
                 MockMvcRequestBuilders.post(URL)
                         .with(SecurityMockMvcRequestPostProcessors.httpBasic(admin.getEmail(), admin.getPassword()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"aa\",\"address\":\"Neq York\",\"unknown\":\"field\"}")
         )
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnprocessableEntity())
+                .andReturn();
+        ErrorTo errorTo = JsonTestUtil.readValue(mapper, result, ErrorTo.class);
+        assertEquals(BAD_REQUEST, errorTo.getError());
     }
 }

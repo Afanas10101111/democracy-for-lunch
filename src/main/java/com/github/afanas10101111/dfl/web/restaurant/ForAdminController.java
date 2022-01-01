@@ -56,12 +56,11 @@ public class ForAdminController extends BaseRestaurantController {
 
     @PutMapping(value = "/{id}" + MEALS_SUFFIX, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateMeals(@PathVariable long id, @Valid @RequestBody List<MealTo> mealTos) {
+    public void updateMeals(@PathVariable long id, @Valid @RequestBody MealTo.ValidList mealTos) {
         log.info("updateMeals (quantity = {}) for restaurant with id = {}", mealTos.size(), id);
-        List<Meal> meals = mealTos.stream()
+        service.updateMeals(id, mealTos.stream()
                 .map(m -> mapper.map(m, Meal.class))
-                .collect(Collectors.toList());
-        service.updateMeals(id, meals);
+                .collect(Collectors.toList()));
     }
 
     @DeleteMapping("/{id}")

@@ -23,6 +23,12 @@ public class ErrorTestUtil {
             = new ErrorTo(ErrorTo.ErrorType.DATA_ACCESS, "Only allowed for unauthenticated user");
     public static final ErrorTo tooLateToVoteExceptionErrorTo
             = new ErrorTo(ErrorTo.ErrorType.VOTING, "Too late to vote! Voting ends at 10:59");
+    public static final ErrorTo methodArgumentNotValidExceptionErrorTo
+            = new ErrorTo(ErrorTo.ErrorType.BAD_REQUEST, "[mealToList.list[0].price,list[0].price] [must be between 100 and 10000000]");
+    public static final ErrorTo restaurantBeanPropertyBindingResultErrorTo
+            = new ErrorTo(ErrorTo.ErrorType.BAD_REQUEST, "[restaurantTo.name,name] [size must be between 2 and 100]");
+    public static final ErrorTo userBeanPropertyBindingResultErrorTo
+            = new ErrorTo(ErrorTo.ErrorType.BAD_REQUEST, "[userTo.enabled,enabled] [must not be null]");
 
     public static void setClock(Clock clock, LocalDateTime dateTime) {
         Clock fixedClock = Clock.fixed(dateTime.atZone(ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault());

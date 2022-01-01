@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.afanas10101111.dfl.config.SecurityConfig;
 import com.github.afanas10101111.dfl.config.WebConfig;
+import com.github.afanas10101111.dfl.dto.ErrorTo;
 import com.github.afanas10101111.dfl.service.RestaurantService;
 import com.github.afanas10101111.dfl.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import javax.annotation.PostConstruct;
 
 import static com.github.afanas10101111.dfl.UserTestUtil.admin;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -115,14 +117,17 @@ public abstract class BaseWebTestClass extends BaseServiceTestClass {
                 .andExpect(status().isNoContent());
     }
 
-    protected void checkValidation(String url, Object invalid) throws Exception {
-        mockMvc.perform(
+    protected void checkValidation(String url, Object invalid, ErrorTo expectedResponse) throws Exception {
+        MvcResult result = mockMvc.perform(
                 MockMvcRequestBuilders.post(url)
                         .with(SecurityMockMvcRequestPostProcessors.httpBasic(admin.getEmail(), admin.getPassword()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(invalid))
         )
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnprocessableEntity())
+                .andReturn();
+        ErrorTo errorTo = JsonTestUtil.readValue(mapper, result, ErrorTo.class);
+        assertEquals(expectedResponse, errorTo);
     }
 }
