@@ -67,6 +67,11 @@ public class Restaurant extends NamedEntity {
         this.meals.forEach(m -> m.setRestaurant(this));
     }
 
+    public void addMeals(Collection<Meal> meals) {
+        meals.forEach(m -> m.setRestaurant(this));
+        this.meals.addAll(meals);
+    }
+
     @Override
     public boolean equals(Object o) {
         return super.equals(o);

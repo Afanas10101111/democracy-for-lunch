@@ -7,33 +7,68 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.github.afanas10101111.dfl.dto.RestaurantTo;
+import com.github.afanas10101111.dfl.dto.UserTo;
+import com.github.afanas10101111.dfl.model.Restaurant;
+import com.github.afanas10101111.dfl.model.User;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
 @EnableWebMvc
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @Configuration
 @ComponentScan("com.github.afanas10101111.dfl.web")
 public class WebConfig implements WebMvcConfigurer {
+    private ObjectMapper objectMapper;
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.add(mappingJackson2HttpMessageConverter());
+        converters.add(new MappingJackson2HttpMessageConverter(getObjectMapper()));
     }
 
-    private MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new Hibernate5Module());
-        mapper.registerModule(new JavaTimeModule());
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
-        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        return new MappingJackson2HttpMessageConverter(mapper);
+    @Bean
+    ObjectMapper objectMapper() {
+        return getObjectMapper();
+    }
+
+    @Bean
+    ModelMapper modelMapper() {
+        ModelMapper mapper = new ModelMapper();
+        mapper.addMappings(new PropertyMap<UserTo, User>() {
+            @Override
+            protected void configure() {
+                skip(destination.getRegistered());
+            }
+        });
+        mapper.addMappings(new PropertyMap<RestaurantTo, Restaurant>() {
+            @Override
+            protected void configure() {
+                skip(destination.getVoices());
+            }
+        });
+        return mapper;
+    }
+
+    private ObjectMapper getObjectMapper() {
+        if (objectMapper == null) {
+            objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new Hibernate5Module());
+            objectMapper.registerModule(new JavaTimeModule());
+            objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+            objectMapper.setVisibility(PropertyAccessor.SETTER, JsonAutoDetect.Visibility.PUBLIC_ONLY);
+            objectMapper.setVisibility(PropertyAccessor.GETTER, JsonAutoDetect.Visibility.PUBLIC_ONLY);
+            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        }
+        return objectMapper;
     }
 }

@@ -7,7 +7,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import javax.transaction.Transactional;
 import java.util.List;
+
+import static com.github.afanas10101111.dfl.util.UserUtil.prepareToSave;
 
 @RequiredArgsConstructor
 @Component
@@ -18,13 +21,23 @@ public class UserService {
 
     public User create(User user) {
         Assert.notNull(user, ASSERT_MESSAGE);
-        return repository.save(user);
+        return repository.save(prepareToSave(user));
     }
 
+    @Transactional
     public void update(User user) {
         Assert.notNull(user, ASSERT_MESSAGE);
-        get(user.id());
-        repository.save(user);
+        User userFromDb = get(user.id());
+
+        userFromDb.setName(user.getName());
+        userFromDb.setEmail(user.getEmail());
+        userFromDb.setPassword(user.getPassword());
+        userFromDb.setEnabled(user.isEnabled());
+        userFromDb.setRoles(user.getRoles());
+    }
+
+    public void enable(long id, boolean enable) {
+        ValidationUtil.checkNotFoundWithId(repository.enable(id, enable), id);
     }
 
     public void delete(long id) {

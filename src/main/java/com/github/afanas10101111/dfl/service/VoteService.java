@@ -39,13 +39,9 @@ public class VoteService {
         if (!sameChoice && votedToday) {
             Restaurant previousChoice = restaurantService.get(user.getVotedForId());
             previousChoice.removeVoice();
-            restaurantService.update(previousChoice);
         }
         restaurant.addVoice();
-        restaurantService.update(restaurant);
-
-        user.setVoteDate(nowDate);
         user.setVotedForId(restaurantId);
-        userService.update(user);
+        user.setVoteDate(nowDate);
     }
 }

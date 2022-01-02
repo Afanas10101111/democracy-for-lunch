@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,17 +36,16 @@ public class Meal extends NamedEntity {
     private Restaurant restaurant;
 
     @Column(name = "price", nullable = false)
-    @NotNull
-    private Double price;
+    @Range(min = 100, max = 10000000)
+    private int price;
 
     @Column(name = "created", nullable = false)
     @NotNull
-    private LocalDate created;
+    private LocalDate created = LocalDate.now();
 
-    public Meal(String name, Double price) {
+    public Meal(String name, int price) {
         super(null, name);
         this.price = price;
-        created = LocalDate.now();
     }
 
     @Override

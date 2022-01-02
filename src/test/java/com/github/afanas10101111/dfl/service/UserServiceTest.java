@@ -1,5 +1,6 @@
 package com.github.afanas10101111.dfl.service;
 
+import com.github.afanas10101111.dfl.BaseServiceTestClass;
 import com.github.afanas10101111.dfl.exception.NotFoundException;
 import com.github.afanas10101111.dfl.model.User;
 import org.junit.jupiter.api.Test;
@@ -8,13 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static com.github.afanas10101111.dfl.UserTestUtil.ADMIN_ID;
 import static com.github.afanas10101111.dfl.UserTestUtil.NA_EMAIL;
 import static com.github.afanas10101111.dfl.UserTestUtil.NA_ID;
+import static com.github.afanas10101111.dfl.UserTestUtil.USER_ID;
 import static com.github.afanas10101111.dfl.UserTestUtil.USER_MATCHER;
 import static com.github.afanas10101111.dfl.UserTestUtil.admin;
 import static com.github.afanas10101111.dfl.UserTestUtil.all;
 import static com.github.afanas10101111.dfl.UserTestUtil.getNew;
 import static com.github.afanas10101111.dfl.UserTestUtil.getUpdated;
 import static com.github.afanas10101111.dfl.UserTestUtil.user;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class UserServiceTest extends BaseServiceTestClass {
 
@@ -50,6 +54,15 @@ class UserServiceTest extends BaseServiceTestClass {
     void createOrUpdateWithNull() {
         assertThrows(IllegalArgumentException.class, () -> service.create(null));
         assertThrows(IllegalArgumentException.class, () -> service.update(null));
+    }
+
+    @Test
+    void enable() {
+        assertTrue(service.get(USER_ID).isEnabled());
+        service.enable(USER_ID, false);
+        assertFalse(service.get(USER_ID).isEnabled());
+        service.enable(USER_ID, true);
+        assertTrue(service.get(USER_ID).isEnabled());
     }
 
     @Test

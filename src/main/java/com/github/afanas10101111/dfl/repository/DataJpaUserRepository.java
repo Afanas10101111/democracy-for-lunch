@@ -11,6 +11,11 @@ public interface DataJpaUserRepository extends JpaRepository<User, Long> {
 
     @Transactional
     @Modifying
+    @Query("UPDATE User u SET u.enabled = ?2 WHERE u.id = ?1")
+    int enable(long id, boolean enable);
+
+    @Transactional
+    @Modifying
     @Query("DELETE FROM User u WHERE u.id = ?1")
     int delete(long id);
 
