@@ -20,6 +20,7 @@ public class ErrorTo {
         DATA_ACCESS(HttpStatus.NOT_FOUND),
         VOTING(HttpStatus.NOT_ACCEPTABLE),
         BAD_REQUEST(HttpStatus.UNPROCESSABLE_ENTITY),
+        ACCESS(HttpStatus.FORBIDDEN),
         INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR);
 
         private final HttpStatus status;

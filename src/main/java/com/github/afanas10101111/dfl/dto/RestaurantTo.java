@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Set;
@@ -24,5 +25,5 @@ public class RestaurantTo {
 
     private Integer voices;
 
-    private Set<MealTo> meals;
+    private Set<@Valid MealTo> meals;
 }
