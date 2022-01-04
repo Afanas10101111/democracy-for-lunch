@@ -11,19 +11,20 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(value = VoteController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class VoteController {
-    public static final String URL = "/vote-for";
+    public static final String URL = "/v1/vote-for";
 
     private final VoteService service;
 
     @PatchMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void vote(@AuthenticationPrincipal AuthorizedUser authUser, long restaurantId) {
+    public void vote(@ApiIgnore @AuthenticationPrincipal AuthorizedUser authUser, long restaurantId) {
         long userId = authUser.getId();
         log.info("User with id = {} voted for restaurant with id = {}", userId, restaurantId);
         service.vote(userId, restaurantId);

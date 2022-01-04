@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static com.github.afanas10101111.dfl.UserTestUtil.USER_ID;
 import static com.github.afanas10101111.dfl.UserTestUtil.USER_MATCHER;
 import static com.github.afanas10101111.dfl.UserTestUtil.admin;
+import static com.github.afanas10101111.dfl.UserTestUtil.getNew;
 import static com.github.afanas10101111.dfl.UserTestUtil.getTo;
 import static com.github.afanas10101111.dfl.UserTestUtil.getUpdated;
 import static com.github.afanas10101111.dfl.UserTestUtil.user;
@@ -22,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class ProfileControllerTest extends BaseWebTestClass {
     private static final String URL = ProfileController.URL;
+    private static final String REG = ProfileController.REG;
 
     @Test
     void get() throws Exception {
@@ -51,5 +53,29 @@ class ProfileControllerTest extends BaseWebTestClass {
                 .andDo(print())
                 .andExpect(status().isNoContent());
         USER_MATCHER.assertMatch(userService.get(USER_ID), getUpdated());
+    }
+
+    @Test
+    void checkMinimalisticRegisterRequest() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.post(URL + REG)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"New\",\"email\":\"new@new.com\",\"password\":\"12345\",\"enabled\":true,\"roles\":[\"USER\"]}")
+        )
+                .andDo(print())
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    void registerForbiddenForAuthenticated() throws Exception {
+        User aNew = getNew();
+        mockMvc.perform(
+                MockMvcRequestBuilders.post(URL + REG)
+                        .with(SecurityMockMvcRequestPostProcessors.httpBasic(admin.getEmail(), admin.getPassword()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(getTo(aNew)))
+        )
+                .andDo(print())
+                .andExpect(status().isForbidden());
     }
 }

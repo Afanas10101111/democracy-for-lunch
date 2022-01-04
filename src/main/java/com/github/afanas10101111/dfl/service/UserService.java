@@ -28,12 +28,12 @@ public class UserService {
     public void update(User user) {
         Assert.notNull(user, ASSERT_MESSAGE);
         User userFromDb = get(user.id());
-
         userFromDb.setName(user.getName());
         userFromDb.setEmail(user.getEmail());
         userFromDb.setPassword(user.getPassword());
         userFromDb.setEnabled(user.isEnabled());
         userFromDb.setRoles(user.getRoles());
+        prepareToSave(userFromDb);
     }
 
     public void enable(long id, boolean enable) {

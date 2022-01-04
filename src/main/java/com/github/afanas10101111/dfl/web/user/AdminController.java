@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @RequestMapping(value = AdminController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminController extends BaseUserController {
-    public static final String URL = "/admin/users";
+    public static final String URL = "/v1/admin/users";
 
     @Override
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
