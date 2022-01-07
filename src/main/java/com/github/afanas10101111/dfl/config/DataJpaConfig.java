@@ -20,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.hibernate.cfg.AvailableSettings.DIALECT;
 import static org.hibernate.cfg.AvailableSettings.FORMAT_SQL;
 import static org.hibernate.cfg.AvailableSettings.JPA_PROXY_COMPLIANCE;
 import static org.hibernate.cfg.AvailableSettings.USE_SQL_COMMENTS;
@@ -30,6 +31,7 @@ import static org.hibernate.cfg.AvailableSettings.USE_SQL_COMMENTS;
 @ComponentScan("com.github.afanas10101111.dfl.repository")
 @EnableJpaRepositories("com.github.afanas10101111.dfl.repository")
 public class DataJpaConfig {
+    public static final String MODEL_PACKAGE = "com.github.afanas10101111.dfl.model";
 
     @Value("${jdbc.driver_class_name}")
     private String jdbcDriverClassName;
@@ -58,6 +60,9 @@ public class DataJpaConfig {
     @Value("${hibernate.show_sql}")
     private Boolean hibernateShowSql;
 
+    @Value("${hibernate.dialect}")
+    private String hibernateDialect;
+
     @Bean
     DataSource dataSource() throws IOException {
         org.apache.tomcat.jdbc.pool.DataSource dataSource = new org.apache.tomcat.jdbc.pool.DataSource();
@@ -77,12 +82,13 @@ public class DataJpaConfig {
     EntityManagerFactory entityManagerFactory(DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
         factoryBean.setDataSource(dataSource);
-        factoryBean.setPackagesToScan("com.github.afanas10101111.dfl.model");
+        factoryBean.setPackagesToScan(MODEL_PACKAGE);
 
-        Map<String, Boolean> jpaPropertyMap = new HashMap<>();
+        Map<String, Object> jpaPropertyMap = new HashMap<>();
         jpaPropertyMap.put(FORMAT_SQL, hibernateFormatSql);
         jpaPropertyMap.put(USE_SQL_COMMENTS, hibernateUseSqlComments);
         jpaPropertyMap.put(JPA_PROXY_COMPLIANCE, false);
+        jpaPropertyMap.put(DIALECT, hibernateDialect);
         factoryBean.setJpaPropertyMap(jpaPropertyMap);
 
         HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();

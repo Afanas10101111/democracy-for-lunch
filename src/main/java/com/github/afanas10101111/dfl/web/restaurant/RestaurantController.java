@@ -4,8 +4,11 @@ import com.github.afanas10101111.dfl.dto.MealTo;
 import com.github.afanas10101111.dfl.dto.RestaurantTo;
 import com.github.afanas10101111.dfl.model.Meal;
 import com.github.afanas10101111.dfl.model.Restaurant;
+import com.github.afanas10101111.dfl.service.RestaurantService;
 import com.github.afanas10101111.dfl.util.ValidationUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,15 +30,19 @@ import java.util.stream.Collectors;
 import static com.github.afanas10101111.dfl.util.ControllerUtil.getUriOfNewResource;
 
 @Slf4j
+@RequiredArgsConstructor
 @RestController
-@RequestMapping(value = ForAdminController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
-@PreAuthorize("hasRole('ADMIN')")
-public class ForAdminController extends BaseRestaurantController {
-    public static final String URL = "/admin/restaurants";
+@RequestMapping(value = RestaurantController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
+public class RestaurantController {
+    public static final String URL = "/v1/restaurants";
     public static final String MEALS_SUFFIX = "/meals";
     public static final String WITH_MEALS_SUFFIX = "/with-meals";
     public static final String UP_TO_DATE_SUFFIX = "/up-to-date";
 
+    private final RestaurantService service;
+    private final ModelMapper mapper;
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestaurantTo> createWithLocation(@Valid @RequestBody RestaurantTo restaurantTo) {
         log.info("createWithLocation (name = {})", restaurantTo.getName());
@@ -45,6 +52,7 @@ public class ForAdminController extends BaseRestaurantController {
         return ResponseEntity.created(getUriOfNewResource(created)).body(getTo(created));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@PathVariable long id, @Valid @RequestBody RestaurantTo restaurantTo) {
@@ -54,6 +62,7 @@ public class ForAdminController extends BaseRestaurantController {
         service.update(updatedFromTo);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/{id}" + MEALS_SUFFIX, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateMeals(@PathVariable long id, @Valid @RequestBody MealTo.ValidList mealTos) {
@@ -63,23 +72,12 @@ public class ForAdminController extends BaseRestaurantController {
                 .collect(Collectors.toList()));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable long id) {
         log.info("delete with id = {}", id);
         service.delete(id);
-    }
-
-    @Override
-    @GetMapping("/{id}")
-    public RestaurantTo get(@PathVariable long id) {
-        return super.get(id);
-    }
-
-    @Override
-    @GetMapping(WITH_MEALS_SUFFIX + "/{id}")
-    public RestaurantTo getWithMeals(@PathVariable long id) {
-        return super.getWithMeals(id);
     }
 
     @GetMapping()
@@ -88,19 +86,54 @@ public class ForAdminController extends BaseRestaurantController {
         return getTos(service.getAll());
     }
 
-    @Override
-    @GetMapping(UP_TO_DATE_SUFFIX)
-    public List<RestaurantTo> getAllUpToDate() {
-        return super.getAllUpToDate();
+    @GetMapping("/{id}")
+    public RestaurantTo get(@PathVariable long id) {
+        log.info("get with id = {}", id);
+        return getTo(service.get(id));
     }
 
-    @Override
+    @GetMapping(WITH_MEALS_SUFFIX + "/{id}")
+    public RestaurantTo getWithMeals(@PathVariable long id) {
+        log.info("getWithMeals with id = {}", id);
+        return getToWithMeals(service.getWithMeals(id));
+    }
+
+    @GetMapping(UP_TO_DATE_SUFFIX)
+    public List<RestaurantTo> getAllUpToDate() {
+        log.info("getAllUpToDate");
+        return getTos(service.getAllUpToDate());
+    }
+
     @GetMapping(WITH_MEALS_SUFFIX)
     public List<RestaurantTo> getAllWithMealsUpToDate() {
-        return super.getAllWithMealsUpToDate();
+        log.info("getAllWithMealsByDate");
+        return getTosWithMeals(service.getAllWithMealsUpToDate());
     }
 
     private Restaurant getFromTo(RestaurantTo to) {
         return mapper.map(to, Restaurant.class);
+    }
+
+    private RestaurantTo getToWithMeals(Restaurant restaurant) {
+        return mapper.map(restaurant, RestaurantTo.class);
+    }
+
+    private List<RestaurantTo> getTosWithMeals(List<Restaurant> restaurants) {
+        return restaurants.stream()
+                .map(this::getToWithMeals)
+                .collect(Collectors.toList());
+    }
+
+    private RestaurantTo getTo(Restaurant restaurant) {
+        restaurant.setMeals(null);
+        RestaurantTo to = getToWithMeals(restaurant);
+        to.setMeals(null);
+        return to;
+    }
+
+    private List<RestaurantTo> getTos(List<Restaurant> restaurants) {
+        return restaurants.stream()
+                .map(this::getTo)
+                .collect(Collectors.toList());
     }
 }

@@ -31,7 +31,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/register").permitAll()
+                .antMatchers("/v1/profile/register").anonymous()
+                .antMatchers("/v1/**").authenticated()
+                .antMatchers(
+                        "/v2/api-docs/**",
+                        "/swagger-resources/**",
+                        "/webjars/springfox-swagger-ui/**",
+                        "/",
+                        "/csrf",
+                        "/swagger-ui.html",
+                        "/index.jsp"
+                ).permitAll()
+                .antMatchers("/**").denyAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();

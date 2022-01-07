@@ -2,7 +2,7 @@ package com.github.afanas10101111.dfl.web;
 
 import com.github.afanas10101111.dfl.dto.ErrorTo;
 import com.github.afanas10101111.dfl.exception.NotFoundException;
-import com.github.afanas10101111.dfl.exception.TooLateToVoteException;
+import com.github.afanas10101111.dfl.exception.TooLateToRevoteException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +25,8 @@ public class ApiExceptionHandler {
         return getErrorResponse(req, e, ErrorTo.ErrorType.DATA_ACCESS);
     }
 
-    @ExceptionHandler(TooLateToVoteException.class)
-    public ResponseEntity<ErrorTo> handleTooLateToVoteException(HttpServletRequest req, TooLateToVoteException e) {
+    @ExceptionHandler(TooLateToRevoteException.class)
+    public ResponseEntity<ErrorTo> handleTooLateToVoteException(HttpServletRequest req, TooLateToRevoteException e) {
         return getErrorResponse(req, e, ErrorTo.ErrorType.VOTING);
     }
 

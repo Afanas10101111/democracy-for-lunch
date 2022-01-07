@@ -37,7 +37,8 @@ public class RestaurantService {
     @Transactional
     public void updateMeals(long id, Collection<Meal> meals) {
         Assert.notNull(meals, ASSERT_MESSAGE);
-        Restaurant restaurantFromDb = getWithMeals(id);
+        Restaurant restaurantFromDb = get(id);
+        restaurantFromDb.setVoices(0);
         restaurantFromDb.addMeals(meals);
     }
 

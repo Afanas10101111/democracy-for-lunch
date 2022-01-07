@@ -36,18 +36,19 @@ import static com.github.afanas10101111.dfl.RestaurantTestUtil.getUpdated;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.hamburger;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.mcDonalds;
 import static com.github.afanas10101111.dfl.UserTestUtil.admin;
+import static com.github.afanas10101111.dfl.UserTestUtil.user;
 import static com.github.afanas10101111.dfl.dto.ErrorTo.ErrorType.BAD_REQUEST;
-import static com.github.afanas10101111.dfl.web.restaurant.ForAdminController.MEALS_SUFFIX;
-import static com.github.afanas10101111.dfl.web.restaurant.ForAdminController.UP_TO_DATE_SUFFIX;
-import static com.github.afanas10101111.dfl.web.restaurant.ForAdminController.URL;
-import static com.github.afanas10101111.dfl.web.restaurant.ForAdminController.WITH_MEALS_SUFFIX;
+import static com.github.afanas10101111.dfl.web.restaurant.RestaurantController.MEALS_SUFFIX;
+import static com.github.afanas10101111.dfl.web.restaurant.RestaurantController.UP_TO_DATE_SUFFIX;
+import static com.github.afanas10101111.dfl.web.restaurant.RestaurantController.URL;
+import static com.github.afanas10101111.dfl.web.restaurant.RestaurantController.WITH_MEALS_SUFFIX;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class ForAdminControllerTest extends BaseWebTestClass {
+class RestaurantControllerTest extends BaseWebTestClass {
     private static final char SLASH = '/';
 
     @Test
@@ -76,6 +77,15 @@ class ForAdminControllerTest extends BaseWebTestClass {
         assertDoesNotThrow(() -> restaurantService.get(MC_DONALDS_ID));
         performDelete(URL + SLASH + MC_DONALDS_ID);
         assertThrows(NotFoundException.class, () -> restaurantService.get(MC_DONALDS_ID));
+    }
+
+    @Test
+    void deleteByUser() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete(URL + SLASH + MC_DONALDS_ID)
+                        .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail(), user.getPassword())))
+                .andDo(print())
+                .andExpect(status().isForbidden());
     }
 
     @Test
