@@ -59,7 +59,9 @@ public class Restaurant extends NamedEntity {
     }
 
     public void removeVoice() {
-        voices--;
+        if (--voices < 0) {
+            voices = 0;
+        }
     }
 
     public void setMeals(Collection<Meal> meals) {

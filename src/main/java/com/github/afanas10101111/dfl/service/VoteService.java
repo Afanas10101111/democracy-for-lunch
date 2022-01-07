@@ -1,6 +1,6 @@
 package com.github.afanas10101111.dfl.service;
 
-import com.github.afanas10101111.dfl.exception.TooLateToVoteException;
+import com.github.afanas10101111.dfl.exception.TooLateToRevoteException;
 import com.github.afanas10101111.dfl.model.Restaurant;
 import com.github.afanas10101111.dfl.model.User;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class VoteService {
         boolean votedToday = Objects.equals(user.getVoteDate(), nowDate);
         boolean sameChoice = Objects.equals(user.getVotedForId(), restaurantId);
         if (votedToday && now.toLocalTime().isAfter(REVOTE_CLOSING_TIME)) {
-            throw new TooLateToVoteException();
+            throw new TooLateToRevoteException();
         } else if (votedToday && sameChoice) {
             return;
         }

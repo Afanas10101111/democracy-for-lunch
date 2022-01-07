@@ -5,7 +5,7 @@ import com.github.afanas10101111.dfl.ClockMockConfig;
 import com.github.afanas10101111.dfl.RestaurantTestUtil;
 import com.github.afanas10101111.dfl.UserTestUtil;
 import com.github.afanas10101111.dfl.exception.NotFoundException;
-import com.github.afanas10101111.dfl.exception.TooLateToVoteException;
+import com.github.afanas10101111.dfl.exception.TooLateToRevoteException;
 import com.github.afanas10101111.dfl.model.User;
 import com.github.afanas10101111.dfl.repository.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -82,7 +82,7 @@ class VoteServiceTest extends BaseServiceTestClass {
         USER_MATCHER.assertMatch(actual, expected);
 
         setClock(clock, INCORRECT_TIME);
-        assertThrows(TooLateToVoteException.class, () -> voteService.vote(USER_ID, KFC_ID));
+        assertThrows(TooLateToRevoteException.class, () -> voteService.vote(USER_ID, KFC_ID));
     }
 
     @Test
