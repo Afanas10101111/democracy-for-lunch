@@ -18,3 +18,7 @@ Each restaurant provides a new menu each day. Admins are responsible for updatin
 After the application is launched (for example, on port 8080), REST API documentation is available by the <a href="http://localhost:8080/swagger-ui.html">link</a> on the <a href="http://localhost:8080/">welcome page</a>.
 
 Application <a href="https://democracy-for-lunch.herokuapp.com/">deployed to heroku</a>.
+
+Authentication data for demo application:
+* admin@gmail.com:admin
+* user@yandex.ru:user
