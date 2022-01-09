@@ -31,6 +31,8 @@ public class ErrorTestUtil {
             = new ErrorTo(ErrorTo.ErrorType.BAD_REQUEST, "[userTo.enabled,enabled] [must not be null]");
     public static final ErrorTo accessDeniedExceptionErrorTo
             = new ErrorTo(ErrorTo.ErrorType.ACCESS, "Access is denied");
+    public static final ErrorTo updateRestrictionExceptionErrorTo
+            = new ErrorTo(ErrorTo.ErrorType.ACCESS, "Update is restricted for entity with id = 100001");
 
     public static void setClock(Clock clock, LocalDateTime dateTime) {
         Clock fixedClock = Clock.fixed(dateTime.atZone(ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault());

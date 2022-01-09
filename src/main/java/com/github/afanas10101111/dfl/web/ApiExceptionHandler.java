@@ -3,6 +3,7 @@ package com.github.afanas10101111.dfl.web;
 import com.github.afanas10101111.dfl.dto.ErrorTo;
 import com.github.afanas10101111.dfl.exception.NotFoundException;
 import com.github.afanas10101111.dfl.exception.TooLateToRevoteException;
+import com.github.afanas10101111.dfl.exception.UpdateRestrictionException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +47,11 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorTo> handleAccessDeniedException(HttpServletRequest req, AccessDeniedException e) {
+        return getErrorResponse(req, e, ErrorTo.ErrorType.ACCESS);
+    }
+
+    @ExceptionHandler(UpdateRestrictionException.class)
+    public ResponseEntity<ErrorTo> handleUpdateRestrictionException(HttpServletRequest req, UpdateRestrictionException e) {
         return getErrorResponse(req, e, ErrorTo.ErrorType.ACCESS);
     }
 
