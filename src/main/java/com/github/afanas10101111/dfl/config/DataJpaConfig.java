@@ -20,9 +20,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.hibernate.cache.jcache.ConfigSettings.MISSING_CACHE_STRATEGY;
+import static org.hibernate.cache.jcache.ConfigSettings.PROVIDER;
+import static org.hibernate.cfg.AvailableSettings.CACHE_REGION_FACTORY;
 import static org.hibernate.cfg.AvailableSettings.DIALECT;
 import static org.hibernate.cfg.AvailableSettings.FORMAT_SQL;
 import static org.hibernate.cfg.AvailableSettings.JPA_PROXY_COMPLIANCE;
+import static org.hibernate.cfg.AvailableSettings.USE_SECOND_LEVEL_CACHE;
 import static org.hibernate.cfg.AvailableSettings.USE_SQL_COMMENTS;
 
 @Configuration
@@ -63,6 +67,18 @@ public class DataJpaConfig {
     @Value("${hibernate.dialect}")
     private String hibernateDialect;
 
+    @Value("${hibernate.cache_region_factory_class}")
+    private String cacheRegionFactoryClass;
+
+    @Value("${hibernate.cache_provider}")
+    private String cacheProvider;
+
+    @Value("${hibernate.missing_cache_strategy}")
+    private String missingCacheStrategy;
+
+    @Value("${hibernate.use_second_level_cache}")
+    private Boolean useSecondLevelCache;
+
     @Bean
     DataSource dataSource() throws IOException {
         org.apache.tomcat.jdbc.pool.DataSource dataSource = new org.apache.tomcat.jdbc.pool.DataSource();
@@ -89,6 +105,10 @@ public class DataJpaConfig {
         jpaPropertyMap.put(USE_SQL_COMMENTS, hibernateUseSqlComments);
         jpaPropertyMap.put(JPA_PROXY_COMPLIANCE, false);
         jpaPropertyMap.put(DIALECT, hibernateDialect);
+        jpaPropertyMap.put(CACHE_REGION_FACTORY, cacheRegionFactoryClass);
+        jpaPropertyMap.put(PROVIDER, cacheProvider);
+        jpaPropertyMap.put(MISSING_CACHE_STRATEGY, missingCacheStrategy);
+        jpaPropertyMap.put(USE_SECOND_LEVEL_CACHE, useSecondLevelCache);
         factoryBean.setJpaPropertyMap(jpaPropertyMap);
 
         HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
@@ -103,4 +123,6 @@ public class DataJpaConfig {
     TransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);
     }
+
+    // TODO add cache managment
 }
