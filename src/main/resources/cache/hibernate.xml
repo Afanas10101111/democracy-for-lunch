@@ -1,0 +1,15 @@
+<config xmlns='http://www.ehcache.org/v3'
+        xmlns:jcache='http://www.ehcache.org/v3/jsr107'>
+
+    <service>
+        <jcache:defaults default-template="expiringCache"/>
+    </service>
+
+    <cache-template name="expiringCache">
+        <expiry>
+            <ttl unit="minutes">10</ttl>
+        </expiry>
+        <heap>1000</heap>
+    </cache-template>
+
+</config>

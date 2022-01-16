@@ -7,6 +7,8 @@ import com.github.afanas10101111.dfl.repository.UserRepository;
 import com.github.afanas10101111.dfl.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ public class UserService {
     public static final String PROFILE_WITH_RESTRICTION = "heroku";
 
     private static final String ASSERT_MESSAGE = "Argument can`t be null";
+    private static final String CACHE_NAME = "users";
 
     private final UserRepository repository;
 
@@ -33,11 +36,13 @@ public class UserService {
         modificationRestriction = environment.acceptsProfiles(Profiles.of(PROFILE_WITH_RESTRICTION));
     }
 
+    @CacheEvict(value = CACHE_NAME, allEntries = true)
     public User create(User user) {
         Assert.notNull(user, ASSERT_MESSAGE);
         return repository.save(prepareToSave(user));
     }
 
+    @CacheEvict(value = CACHE_NAME, allEntries = true)
     @Transactional
     public void update(User user) {
         Assert.notNull(user, ASSERT_MESSAGE);
@@ -52,11 +57,13 @@ public class UserService {
         prepareToSave(userFromDb);
     }
 
+    @CacheEvict(value = CACHE_NAME, allEntries = true)
     public void enable(long id, boolean enable) {
         checkModificationAllowed(id);
         ValidationUtil.checkNotFoundWithId(repository.enable(id, enable), id);
     }
 
+    @CacheEvict(value = CACHE_NAME, allEntries = true)
     public void delete(long id) {
         checkModificationAllowed(id);
         ValidationUtil.checkNotFoundWithId(repository.delete(id), id);
@@ -71,6 +78,7 @@ public class UserService {
         return ValidationUtil.checkNotFoundWithMsg(repository.getByEmail(email), String.format("email=%s", email));
     }
 
+    @Cacheable(CACHE_NAME)
     public List<User> getAll() {
         return repository.getAll();
     }

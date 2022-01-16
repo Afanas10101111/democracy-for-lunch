@@ -34,7 +34,7 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString(callSuper = true)
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(region = "user", usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Entity
 @Table(
         name = "users",
@@ -66,7 +66,7 @@ public class User extends NamedEntity {
     @Column(name = "voted_for_id")
     private Long votedForId;
 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @Cache(region = "roles", usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @Enumerated(EnumType.STRING)
     @CollectionTable(
             name = "user_roles",

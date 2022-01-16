@@ -1,0 +1,12 @@
+<config xmlns='http://www.ehcache.org/v3'>
+
+    <cache-template name="singleNonExpiringCache">
+        <expiry>
+            <none/>
+        </expiry>
+        <heap>1</heap>
+    </cache-template>
+
+    <cache alias="users" uses-template="singleNonExpiringCache"/>
+
+</config>
