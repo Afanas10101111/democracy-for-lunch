@@ -1,8 +1,8 @@
 package com.github.afanas10101111.dfl;
 
-import com.github.afanas10101111.dfl.dto.MealTo;
+import com.github.afanas10101111.dfl.dto.DishTo;
 import com.github.afanas10101111.dfl.dto.RestaurantTo;
-import com.github.afanas10101111.dfl.model.Meal;
+import com.github.afanas10101111.dfl.model.Dish;
 import com.github.afanas10101111.dfl.model.Restaurant;
 
 import java.time.LocalDate;
@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class RestaurantTestUtil {
-    public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_MATCHER = MatcherFactory.createWithFieldsToIgnore("meals");
-    public static final MatcherFactory.Matcher<RestaurantTo> RESTAURANT_TO_MATCHER = MatcherFactory.createWithFieldsToIgnore("meals");
-    public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_WITH_MEALS_MATCHER = MatcherFactory.createWithFieldsToIgnore("meals.date", "meals.restaurant");
-    public static final MatcherFactory.Matcher<RestaurantTo> RESTAURANT_TO_WITH_MEALS_MATCHER = MatcherFactory.createWithFieldsToIgnore("");
-    public static final MatcherFactory.Matcher<Meal> MEAL_MATCHER = MatcherFactory.createWithFieldsToIgnore("date", "restaurant");
+    public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_MATCHER = MatcherFactory.createWithFieldsToIgnore("dishes");
+    public static final MatcherFactory.Matcher<RestaurantTo> RESTAURANT_TO_MATCHER = MatcherFactory.createWithFieldsToIgnore("dishes");
+    public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_WITH_DISHES_MATCHER = MatcherFactory.createWithFieldsToIgnore("dishes.date", "dishes.restaurant");
+    public static final MatcherFactory.Matcher<RestaurantTo> RESTAURANT_TO_WITH_DISHES_MATCHER = MatcherFactory.createWithFieldsToIgnore("");
+    public static final MatcherFactory.Matcher<Dish> DISH_MATCHER = MatcherFactory.createWithFieldsToIgnore("date", "restaurant");
 
     public static final LocalDate NOW = LocalDate.now();
 
@@ -35,16 +35,16 @@ public class RestaurantTestUtil {
     public static final long AA_NEW_PIE_ID = 100014;
     public static final long AB_NEW_PIE_ID = 100015;
 
-    public static final Meal hamburger = new Meal("hamburger", 5000);
-    public static final Meal cheeseburger = new Meal("cheeseburger", 6000);
-    public static final Meal bigMak = new Meal("big mak", 16000);
-    public static final Meal kingBurger = new Meal("king burger", 8000);
-    public static final Meal kingBurgerRoyal = new Meal("king burger royal", 18000);
-    public static final Meal sundersWings = new Meal("sunders wings", 9000);
-    public static final Meal bigBasket = new Meal("big basket", 19000);
-    public static final Meal megaSandwich = new Meal("mega sandwich", 10000);
-    public static final Meal aaNewPie = new Meal("aaNewPie", 8888);
-    public static final Meal abNewPie = new Meal("abNewPie", 9999);
+    public static final Dish hamburger = new Dish("hamburger", 5000);
+    public static final Dish cheeseburger = new Dish("cheeseburger", 6000);
+    public static final Dish bigMak = new Dish("big mak", 16000);
+    public static final Dish kingBurger = new Dish("king burger", 8000);
+    public static final Dish kingBurgerRoyal = new Dish("king burger royal", 18000);
+    public static final Dish sundersWings = new Dish("sunders wings", 9000);
+    public static final Dish bigBasket = new Dish("big basket", 19000);
+    public static final Dish megaSandwich = new Dish("mega sandwich", 10000);
+    public static final Dish aaNewPie = new Dish("aaNewPie", 8888);
+    public static final Dish abNewPie = new Dish("abNewPie", 9999);
 
     public static final Restaurant mcDonalds = new Restaurant("McDonalds", "Moscow", List.of(bigMak, cheeseburger, hamburger));
     public static final Restaurant burgerKing = new Restaurant("BurgerKing", "Moscow", List.of(kingBurger, kingBurgerRoyal));
@@ -77,12 +77,12 @@ public class RestaurantTestUtil {
                 .map(RestaurantTestUtil::getTo)
                 .collect(Collectors.toList());
         allTosWithActualMenu = allWithActualMenu.stream()
-                .map(RestaurantTestUtil::getToWithMeals)
+                .map(RestaurantTestUtil::getToWithDishes)
                 .collect(Collectors.toList());
     }
 
     public static Restaurant getNew() {
-        return new Restaurant("New", "Neq York", List.of(new Meal(hamburger.getName(), hamburger.getPrice())));
+        return new Restaurant("New", "New York", List.of(new Dish(hamburger.getName(), hamburger.getPrice())));
     }
 
     public static Restaurant getUpdated() {
@@ -91,18 +91,18 @@ public class RestaurantTestUtil {
         return updated;
     }
 
-    public static List<Meal> getNewMeals() {
-        return List.of(new Meal(aaNewPie.getName(), aaNewPie.getPrice()));
+    public static List<Dish> getNewDishes() {
+        return List.of(new Dish(aaNewPie.getName(), aaNewPie.getPrice()));
     }
 
-    public static RestaurantTo getToWithMeals(Restaurant restaurant) {
+    public static RestaurantTo getToWithDishes(Restaurant restaurant) {
         return new RestaurantTo(
                 restaurant.id(),
                 restaurant.getName(),
                 restaurant.getAddress(),
                 restaurant.getVoices(),
-                restaurant.getMeals().stream()
-                        .map(RestaurantTestUtil::getMealTo)
+                restaurant.getDishes().stream()
+                        .map(RestaurantTestUtil::getDishTo)
                         .collect(Collectors.toSet())
         );
     }
@@ -117,7 +117,7 @@ public class RestaurantTestUtil {
         );
     }
 
-    public static MealTo getMealTo(Meal meal) {
-        return new MealTo(meal.getName(), meal.getPrice());
+    public static DishTo getDishTo(Dish dish) {
+        return new DishTo(dish.getName(), dish.getPrice());
     }
 }

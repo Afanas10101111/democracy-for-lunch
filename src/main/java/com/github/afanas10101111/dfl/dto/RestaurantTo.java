@@ -25,5 +25,5 @@ public class RestaurantTo {
 
     private Integer voices;
 
-    private Set<@Valid MealTo> meals;
+    private Set<@Valid DishTo> dishes;
 }

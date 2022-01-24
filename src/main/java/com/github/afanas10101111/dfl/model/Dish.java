@@ -24,10 +24,10 @@ import java.time.LocalDate;
 @ToString(callSuper = true, exclude = "restaurant")
 @Entity
 @Table(
-        name = "meals",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"restaurant_id", "name"}, name = "uc_restaurant_name")
+        name = "dishes",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"serving_date", "restaurant_id", "name"}, name = "uc_date_restaurant_name")
 )
-public class Meal extends NamedEntity {
+public class Dish extends NamedEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
@@ -36,14 +36,14 @@ public class Meal extends NamedEntity {
     private Restaurant restaurant;
 
     @Column(name = "price", nullable = false)
-    @Range(min = 100, max = 10000000)
+    @Range(min = 1, max = 10000000)
     private int price;
 
-    @Column(name = "created", nullable = false)
+    @Column(name = "serving_date", nullable = false)
     @NotNull
-    private LocalDate created = LocalDate.now();
+    private LocalDate servingDate = LocalDate.now();
 
-    public Meal(String name, int price) {
+    public Dish(String name, int price) {
         super(null, name);
         this.price = price;
     }

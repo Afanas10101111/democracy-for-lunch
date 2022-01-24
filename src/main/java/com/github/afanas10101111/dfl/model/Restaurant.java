@@ -26,7 +26,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString(callSuper = true, exclude = "meals")
+@ToString(callSuper = true, exclude = "dishes")
 @Entity
 @Table(
         name = "restaurants",
@@ -46,12 +46,12 @@ public class Restaurant extends NamedEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @OrderBy("name")
-    private Set<Meal> meals;
+    private Set<Dish> dishes;
 
-    public Restaurant(String name, String address, Collection<Meal> meals) {
+    public Restaurant(String name, String address, Collection<Dish> dishes) {
         super(null, name);
         this.address = address;
-        setMeals(meals);
+        setDishes(dishes);
     }
 
     public void addVoice() {
@@ -64,14 +64,14 @@ public class Restaurant extends NamedEntity {
         }
     }
 
-    public void setMeals(Collection<Meal> meals) {
-        this.meals = CollectionUtils.isEmpty(meals) ? Collections.emptySet() : Set.copyOf(meals);
-        this.meals.forEach(m -> m.setRestaurant(this));
+    public void setDishes(Collection<Dish> dishes) {
+        this.dishes = CollectionUtils.isEmpty(dishes) ? Collections.emptySet() : Set.copyOf(dishes);
+        this.dishes.forEach(m -> m.setRestaurant(this));
     }
 
-    public void addMeals(Collection<Meal> meals) {
-        meals.forEach(m -> m.setRestaurant(this));
-        this.meals.addAll(meals);
+    public void addDishes(Collection<Dish> dishes) {
+        dishes.forEach(m -> m.setRestaurant(this));
+        this.dishes.addAll(dishes);
     }
 
     @Override

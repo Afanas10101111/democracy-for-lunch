@@ -27,8 +27,8 @@ public class RestaurantRepository {
         return repository.findById(id).orElse(null);
     }
 
-    public Restaurant getWithMealsByDate(long id, LocalDate date) {
-        return repository.getWithMealsByDate(id, date);
+    public Restaurant getWithDishesByDate(long id, LocalDate date) {
+        return repository.getWithDishesByDate(id, date);
     }
 
     public List<Restaurant> getAll() {
@@ -39,7 +39,7 @@ public class RestaurantRepository {
         return repository.getAllUpToDate(date);
     }
 
-    public List<Restaurant> getAllWithMealsByDate(LocalDate date) {
-        return repository.getAllWithMealsByDate(date);
+    public List<Restaurant> getAllWithDishesByDate(LocalDate date) {
+        return repository.getAllWithDishesByDate(date);
     }
 }

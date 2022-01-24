@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.MC_DONALDS_ID;
-import static com.github.afanas10101111.dfl.RestaurantTestUtil.MEAL_MATCHER;
+import static com.github.afanas10101111.dfl.RestaurantTestUtil.DISH_MATCHER;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.NA_ID;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.RESTAURANT_MATCHER;
-import static com.github.afanas10101111.dfl.RestaurantTestUtil.RESTAURANT_WITH_MEALS_MATCHER;
+import static com.github.afanas10101111.dfl.RestaurantTestUtil.RESTAURANT_WITH_DISHES_MATCHER;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.SUB_WAY_ID;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.all;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.allWithActualMenu;
@@ -18,7 +18,7 @@ import static com.github.afanas10101111.dfl.RestaurantTestUtil.bigMak;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.burgerKing;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.cheeseburger;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.getNew;
-import static com.github.afanas10101111.dfl.RestaurantTestUtil.getNewMeals;
+import static com.github.afanas10101111.dfl.RestaurantTestUtil.getNewDishes;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.getUpdated;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.hamburger;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.kfc;
@@ -33,22 +33,22 @@ class RestaurantServiceTest extends BaseServiceTestClass {
     private RestaurantService service;
 
     @Test
-    void createAndGetWithMealsByDate() {
+    void createAndGetWithDishesByDate() {
         Restaurant created = service.create(getNew());
         long createdId = created.id();
-        long createdMealId = created.getMeals().stream()
+        long createdMealId = created.getDishes().stream()
                 .findFirst()
                 .orElseThrow()
                 .id();
         Restaurant expected = getNew();
         expected.setId(createdId);
-        expected.getMeals().stream()
+        expected.getDishes().stream()
                 .findFirst()
                 .orElseThrow()
                 .setId(createdMealId);
-        RESTAURANT_WITH_MEALS_MATCHER.assertMatch(created, expected);
+        RESTAURANT_WITH_DISHES_MATCHER.assertMatch(created, expected);
         RESTAURANT_MATCHER.assertMatch(service.get(createdId), expected);
-        RESTAURANT_WITH_MEALS_MATCHER.assertMatch(service.getWithMeals(createdId), expected);
+        RESTAURANT_WITH_DISHES_MATCHER.assertMatch(service.getWithDishes(createdId), expected);
     }
 
     @Test
@@ -67,9 +67,9 @@ class RestaurantServiceTest extends BaseServiceTestClass {
     }
 
     @Test
-    void updateMeals() {
-        service.updateMeals(MC_DONALDS_ID, getNewMeals());
-        MEAL_MATCHER.assertMatch(service.getWithMeals(MC_DONALDS_ID).getMeals(), aaNewPie, bigMak, cheeseburger, hamburger);
+    void updateDishes() {
+        service.updateDishes(MC_DONALDS_ID, getNewDishes());
+        DISH_MATCHER.assertMatch(service.getWithDishes(MC_DONALDS_ID).getDishes(), aaNewPie, bigMak, cheeseburger, hamburger);
     }
 
     @Test
@@ -92,8 +92,8 @@ class RestaurantServiceTest extends BaseServiceTestClass {
     }
 
     @Test
-    void getWithOutOfDateMeals() {
-        assertThrows(NotFoundException.class, () -> service.getWithMeals(SUB_WAY_ID));
+    void getWithOutOfDateDishes() {
+        assertThrows(NotFoundException.class, () -> service.getWithDishes(SUB_WAY_ID));
     }
 
     @Test
@@ -107,7 +107,7 @@ class RestaurantServiceTest extends BaseServiceTestClass {
     }
 
     @Test
-    void getAllWithMealsUpToDate() {
-        RESTAURANT_WITH_MEALS_MATCHER.assertMatch(service.getAllWithMealsUpToDate(), allWithActualMenu);
+    void getAllWithDishesUpToDate() {
+        RESTAURANT_WITH_DISHES_MATCHER.assertMatch(service.getAllWithDishesUpToDate(), allWithActualMenu);
     }
 }

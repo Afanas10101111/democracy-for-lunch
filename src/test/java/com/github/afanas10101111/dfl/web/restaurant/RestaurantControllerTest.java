@@ -3,7 +3,7 @@ package com.github.afanas10101111.dfl.web.restaurant;
 import com.github.afanas10101111.dfl.BaseWebTestClass;
 import com.github.afanas10101111.dfl.JsonTestUtil;
 import com.github.afanas10101111.dfl.dto.ErrorTo;
-import com.github.afanas10101111.dfl.dto.MealTo;
+import com.github.afanas10101111.dfl.dto.DishTo;
 import com.github.afanas10101111.dfl.dto.RestaurantTo;
 import com.github.afanas10101111.dfl.exception.NotFoundException;
 import com.github.afanas10101111.dfl.model.Restaurant;
@@ -18,30 +18,30 @@ import java.util.List;
 import static com.github.afanas10101111.dfl.ErrorTestUtil.restaurantBeanPropertyBindingResultErrorTo;
 import static com.github.afanas10101111.dfl.ErrorTestUtil.methodArgumentNotValidExceptionErrorTo;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.MC_DONALDS_ID;
-import static com.github.afanas10101111.dfl.RestaurantTestUtil.MEAL_MATCHER;
+import static com.github.afanas10101111.dfl.RestaurantTestUtil.DISH_MATCHER;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.RESTAURANT_MATCHER;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.RESTAURANT_TO_MATCHER;
-import static com.github.afanas10101111.dfl.RestaurantTestUtil.RESTAURANT_TO_WITH_MEALS_MATCHER;
+import static com.github.afanas10101111.dfl.RestaurantTestUtil.RESTAURANT_TO_WITH_DISHES_MATCHER;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.aaNewPie;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.abNewPie;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.allTos;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.allTosWithActualMenu;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.bigMak;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.cheeseburger;
-import static com.github.afanas10101111.dfl.RestaurantTestUtil.getMealTo;
+import static com.github.afanas10101111.dfl.RestaurantTestUtil.getDishTo;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.getNew;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.getTo;
-import static com.github.afanas10101111.dfl.RestaurantTestUtil.getToWithMeals;
+import static com.github.afanas10101111.dfl.RestaurantTestUtil.getToWithDishes;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.getUpdated;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.hamburger;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.mcDonalds;
 import static com.github.afanas10101111.dfl.UserTestUtil.admin;
 import static com.github.afanas10101111.dfl.UserTestUtil.user;
 import static com.github.afanas10101111.dfl.dto.ErrorTo.ErrorType.BAD_REQUEST;
-import static com.github.afanas10101111.dfl.web.restaurant.RestaurantController.MEALS_SUFFIX;
+import static com.github.afanas10101111.dfl.web.restaurant.RestaurantController.DISHES_SUFFIX;
 import static com.github.afanas10101111.dfl.web.restaurant.RestaurantController.UP_TO_DATE_SUFFIX;
 import static com.github.afanas10101111.dfl.web.restaurant.RestaurantController.URL;
-import static com.github.afanas10101111.dfl.web.restaurant.RestaurantController.WITH_MEALS_SUFFIX;
+import static com.github.afanas10101111.dfl.web.restaurant.RestaurantController.WITH_DISHES_SUFFIX;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -67,9 +67,9 @@ class RestaurantControllerTest extends BaseWebTestClass {
     }
 
     @Test
-    void updateMeals() throws Exception {
-        performPut(URL + SLASH + MC_DONALDS_ID + MEALS_SUFFIX, (List.of(getMealTo(aaNewPie), getMealTo(abNewPie))));
-        MEAL_MATCHER.assertMatch(restaurantService.getWithMeals(MC_DONALDS_ID).getMeals(), aaNewPie, abNewPie, bigMak, cheeseburger, hamburger);
+    void updateDishes() throws Exception {
+        performPut(URL + SLASH + MC_DONALDS_ID + DISHES_SUFFIX, (List.of(getDishTo(aaNewPie), getDishTo(abNewPie))));
+        DISH_MATCHER.assertMatch(restaurantService.getWithDishes(MC_DONALDS_ID).getDishes(), aaNewPie, abNewPie, bigMak, cheeseburger, hamburger);
     }
 
     @Test
@@ -92,15 +92,15 @@ class RestaurantControllerTest extends BaseWebTestClass {
     void get() throws Exception {
         RESTAURANT_TO_MATCHER.assertMatch(
                 JsonTestUtil.readValue(mapper, getGetResult(URL + SLASH + MC_DONALDS_ID), RestaurantTo.class),
-                getToWithMeals(mcDonalds)
+                getToWithDishes(mcDonalds)
         );
     }
 
     @Test
-    void getWithMeals() throws Exception {
-        RESTAURANT_TO_WITH_MEALS_MATCHER.assertMatch(
-                JsonTestUtil.readValue(mapper, getGetResult(URL + WITH_MEALS_SUFFIX + SLASH + MC_DONALDS_ID), RestaurantTo.class),
-                getToWithMeals(mcDonalds)
+    void getWithDishes() throws Exception {
+        RESTAURANT_TO_WITH_DISHES_MATCHER.assertMatch(
+                JsonTestUtil.readValue(mapper, getGetResult(URL + WITH_DISHES_SUFFIX + SLASH + MC_DONALDS_ID), RestaurantTo.class),
+                getToWithDishes(mcDonalds)
         );
     }
 
@@ -121,9 +121,9 @@ class RestaurantControllerTest extends BaseWebTestClass {
     }
 
     @Test
-    void getAllWithMealsUpToDate() throws Exception {
-        RESTAURANT_TO_WITH_MEALS_MATCHER.assertMatch(
-                JsonTestUtil.readValues(mapper, getGetResult(URL + WITH_MEALS_SUFFIX), RestaurantTo.class),
+    void getAllWithDishesUpToDate() throws Exception {
+        RESTAURANT_TO_WITH_DISHES_MATCHER.assertMatch(
+                JsonTestUtil.readValues(mapper, getGetResult(URL + WITH_DISHES_SUFFIX), RestaurantTo.class),
                 allTosWithActualMenu
         );
     }
@@ -136,11 +136,11 @@ class RestaurantControllerTest extends BaseWebTestClass {
     }
 
     @Test
-    void addNotValidMeals() throws Exception {
-        MealTo invalid = getMealTo(aaNewPie);
-        invalid.setPrice(99);
+    void addNotValidDishes() throws Exception {
+        DishTo invalid = getDishTo(aaNewPie);
+        invalid.setPrice(0);
         MvcResult result = mockMvc.perform(
-                MockMvcRequestBuilders.put(URL + SLASH + MC_DONALDS_ID + MEALS_SUFFIX)
+                MockMvcRequestBuilders.put(URL + SLASH + MC_DONALDS_ID + DISHES_SUFFIX)
                         .with(SecurityMockMvcRequestPostProcessors.httpBasic(admin.getEmail(), admin.getPassword()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(List.of(invalid)))

@@ -1,7 +1,7 @@
 package com.github.afanas10101111.dfl.repository;
 
 import com.github.afanas10101111.dfl.BaseTestClass;
-import com.github.afanas10101111.dfl.model.Meal;
+import com.github.afanas10101111.dfl.model.Dish;
 import com.github.afanas10101111.dfl.model.Restaurant;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import static com.github.afanas10101111.dfl.RestaurantTestUtil.NOW;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.MC_DONALDS_ID;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.NA_ID;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.RESTAURANT_MATCHER;
-import static com.github.afanas10101111.dfl.RestaurantTestUtil.RESTAURANT_WITH_MEALS_MATCHER;
+import static com.github.afanas10101111.dfl.RestaurantTestUtil.RESTAURANT_WITH_DISHES_MATCHER;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.all;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.allWithActualMenu;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.getNew;
@@ -37,14 +37,14 @@ class RestaurantRepositoryTest extends BaseTestClass {
         long savedId = saved.id();
         Restaurant expectedSaved = getNew();
         expectedSaved.setId(savedId);
-        expectedSaved.setMeals(saved.getMeals());
-        RESTAURANT_WITH_MEALS_MATCHER.assertMatch(saved, expectedSaved);
-        RESTAURANT_WITH_MEALS_MATCHER.assertMatch(repository.getWithMealsByDate(savedId, LocalDate.now()), expectedSaved);
+        expectedSaved.setDishes(saved.getDishes());
+        RESTAURANT_WITH_DISHES_MATCHER.assertMatch(saved, expectedSaved);
+        RESTAURANT_WITH_DISHES_MATCHER.assertMatch(repository.getWithDishesByDate(savedId, LocalDate.now()), expectedSaved);
 
         Restaurant updatedFromDb = repository.save(getUpdated());
         Restaurant expectedUpdated = getUpdated();
-        RESTAURANT_WITH_MEALS_MATCHER.assertMatch(updatedFromDb, expectedUpdated);
-        RESTAURANT_WITH_MEALS_MATCHER.assertMatch(repository.getWithMealsByDate(updatedFromDb.id(), LocalDate.now()), expectedUpdated);
+        RESTAURANT_WITH_DISHES_MATCHER.assertMatch(updatedFromDb, expectedUpdated);
+        RESTAURANT_WITH_DISHES_MATCHER.assertMatch(repository.getWithDishesByDate(updatedFromDb.id(), LocalDate.now()), expectedUpdated);
     }
 
     @Test
@@ -55,9 +55,9 @@ class RestaurantRepositoryTest extends BaseTestClass {
         assertThrows(DataIntegrityViolationException.class, () -> repository.save(doubleRestaurant));
 
         Restaurant doubleMeal = getNew();
-        doubleMeal.setMeals(List.of(
-                new Meal(hamburger.getName(), hamburger.getPrice()),
-                new Meal(hamburger.getName(), hamburger.getPrice())
+        doubleMeal.setDishes(List.of(
+                new Dish(hamburger.getName(), hamburger.getPrice()),
+                new Dish(hamburger.getName(), hamburger.getPrice())
         ));
         assertThrows(DataIntegrityViolationException.class, () -> repository.save(doubleMeal));
     }
@@ -80,13 +80,13 @@ class RestaurantRepositoryTest extends BaseTestClass {
     }
 
     @Test
-    void getWithMealsByDate() {
-        RESTAURANT_WITH_MEALS_MATCHER.assertMatch(repository.getWithMealsByDate(MC_DONALDS_ID, NOW), mcDonalds);
+    void getWithDishesByDate() {
+        RESTAURANT_WITH_DISHES_MATCHER.assertMatch(repository.getWithDishesByDate(MC_DONALDS_ID, NOW), mcDonalds);
     }
 
     @Test
-    void getWithOutOfDateMeals() {
-        assertNull(repository.getWithMealsByDate(MC_DONALDS_ID, NOW.minusDays(1)));
+    void getWithOutOfDateDishes() {
+        assertNull(repository.getWithDishesByDate(MC_DONALDS_ID, NOW.minusDays(1)));
     }
 
     @Test
@@ -100,7 +100,7 @@ class RestaurantRepositoryTest extends BaseTestClass {
     }
 
     @Test
-    void getAllWithMealsByDate() {
-        RESTAURANT_WITH_MEALS_MATCHER.assertMatch(repository.getAllWithMealsByDate(NOW), allWithActualMenu);
+    void getAllWithDishesByDate() {
+        RESTAURANT_WITH_DISHES_MATCHER.assertMatch(repository.getAllWithDishesByDate(NOW), allWithActualMenu);
     }
 }
