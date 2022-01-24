@@ -16,7 +16,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Service
 public class VoteService {
-    public static final LocalTime REVOTE_CLOSING_TIME = LocalTime.of(10, 59);
+    public static final LocalTime REVOTE_CLOSING_TIME = LocalTime.of(10, 59, 59);
     private final UserService userService;
     private final RestaurantService restaurantService;
     private final Clock clock;

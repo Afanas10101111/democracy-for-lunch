@@ -49,7 +49,7 @@ public class Restaurant extends NamedEntity {
     private Set<Dish> dishes;
 
     public Restaurant(String name, String address, Collection<Dish> dishes) {
-        super(null, name);
+        super(name);
         this.address = address;
         setDishes(dishes);
     }

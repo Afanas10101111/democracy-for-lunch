@@ -1,7 +1,7 @@
 package com.github.afanas10101111.dfl.service;
 
 import com.github.afanas10101111.dfl.exception.UpdateRestrictionException;
-import com.github.afanas10101111.dfl.model.NamedEntity;
+import com.github.afanas10101111.dfl.model.BaseEntity;
 import com.github.afanas10101111.dfl.model.User;
 import com.github.afanas10101111.dfl.repository.UserRepository;
 import com.github.afanas10101111.dfl.util.ValidationUtil;
@@ -84,7 +84,7 @@ public class UserService {
     }
 
     private void checkModificationAllowed(long id) {
-        if (modificationRestriction && id < NamedEntity.START_SEQ + 2) {
+        if (modificationRestriction && id < BaseEntity.START_SEQ + 2) {
             throw new UpdateRestrictionException(id);
         }
     }

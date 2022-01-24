@@ -80,7 +80,7 @@ public class User extends NamedEntity {
     private Set<Role> roles;
 
     public User(String name, String email, String password, boolean enabled, Collection<Role> roles) {
-        super(null, name);
+        super(name);
         this.email = email;
         this.password = password;
         this.enabled = enabled;

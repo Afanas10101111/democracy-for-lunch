@@ -44,7 +44,7 @@ public class Dish extends NamedEntity {
     private LocalDate servingDate = LocalDate.now();
 
     public Dish(String name, int price) {
-        super(null, name);
+        super(name);
         this.price = price;
     }
 

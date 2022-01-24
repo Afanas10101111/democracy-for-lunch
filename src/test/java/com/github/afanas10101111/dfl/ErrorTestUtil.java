@@ -20,7 +20,7 @@ public class ErrorTestUtil {
     public static final ErrorTo illegalArgumentExceptionErrorTo
             = new ErrorTo(ErrorTo.ErrorType.DATA_ACCESS, "Updated must be with id = 100001");
     public static final ErrorTo tooLateToVoteExceptionErrorTo
-            = new ErrorTo(ErrorTo.ErrorType.VOTING, "Too late to revote! Voting ends at 10:59");
+            = new ErrorTo(ErrorTo.ErrorType.VOTING, "Too late to revote! Voting ends at 10:59:59");
     public static final ErrorTo methodArgumentNotValidExceptionErrorTo
             = new ErrorTo(ErrorTo.ErrorType.BAD_REQUEST, "[dishToList.list[0].price,list[0].price] [must be between 1 and 10000000]");
     public static final ErrorTo restaurantBeanPropertyBindingResultErrorTo
