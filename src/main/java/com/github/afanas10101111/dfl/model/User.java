@@ -24,7 +24,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
 import java.util.EnumSet;
@@ -59,12 +58,6 @@ public class User extends NamedEntity {
 
     @Column(name = "enabled", nullable = false)
     private boolean enabled;
-
-    @Column(name = "vote_date")
-    private LocalDate voteDate;
-
-    @Column(name = "voted_for_id")
-    private Long votedForId;
 
     @Cache(region = "roles", usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @Enumerated(EnumType.STRING)

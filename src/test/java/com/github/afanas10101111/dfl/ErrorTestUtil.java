@@ -11,7 +11,7 @@ import static com.github.afanas10101111.dfl.RestaurantTestUtil.NOW;
 import static org.mockito.Mockito.doReturn;
 
 public class ErrorTestUtil {
-    public static final LocalDateTime CORRECT_TIME = LocalDateTime.of(NOW, LocalTime.of(10, 59));
+    public static final LocalDateTime CORRECT_TIME = LocalDateTime.of(NOW, LocalTime.of(10, 59, 59));
     public static final LocalDateTime INCORRECT_TIME = LocalDateTime.of(NOW, LocalTime.of(11, 0));
     public static final LocalDateTime INCORRECT_DATE = LocalDateTime.of(NOW.plusDays(1), LocalTime.of(10, 0));
 

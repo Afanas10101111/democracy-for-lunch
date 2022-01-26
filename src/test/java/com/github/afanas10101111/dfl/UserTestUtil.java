@@ -4,11 +4,8 @@ import com.github.afanas10101111.dfl.dto.UserTo;
 import com.github.afanas10101111.dfl.model.Role;
 import com.github.afanas10101111.dfl.model.User;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
-
-import static com.github.afanas10101111.dfl.RestaurantTestUtil.MC_DONALDS_ID;
 
 public class UserTestUtil {
     public static final MatcherFactory.Matcher<User> USER_MATCHER
@@ -49,13 +46,5 @@ public class UserTestUtil {
                 user.isEnabled(),
                 user.getRoles()
         );
-    }
-
-    public static User getVotedUser() {
-        User votedUser = new User(user.getName(), user.getEmail(), user.getPassword(), user.isEnabled(), user.getRoles());
-        votedUser.setId(USER_ID);
-        votedUser.setVoteDate(LocalDate.now());
-        votedUser.setVotedForId(MC_DONALDS_ID);
-        return votedUser;
     }
 }

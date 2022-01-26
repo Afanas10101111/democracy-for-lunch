@@ -100,7 +100,6 @@ public class RestaurantTestUtil {
                 restaurant.id(),
                 restaurant.getName(),
                 restaurant.getAddress(),
-                restaurant.getVoices(),
                 restaurant.getDishes().stream()
                         .map(RestaurantTestUtil::getDishTo)
                         .collect(Collectors.toSet())
@@ -112,7 +111,6 @@ public class RestaurantTestUtil {
                 restaurant.getId(),
                 restaurant.getName(),
                 restaurant.getAddress(),
-                restaurant.getVoices(),
                 null
         );
     }

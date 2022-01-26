@@ -38,7 +38,6 @@ public class RestaurantService {
     public void updateDishes(long id, Collection<Dish> dishes) {
         Assert.notNull(dishes, ASSERT_MESSAGE);
         Restaurant restaurantFromDb = get(id);
-        restaurantFromDb.setVoices(0);
         restaurantFromDb.addDishes(dishes);
     }
 
