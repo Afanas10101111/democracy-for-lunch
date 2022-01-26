@@ -2,8 +2,8 @@ package com.github.afanas10101111.dfl.web.restaurant;
 
 import com.github.afanas10101111.dfl.BaseWebTestClass;
 import com.github.afanas10101111.dfl.JsonTestUtil;
-import com.github.afanas10101111.dfl.dto.ErrorTo;
 import com.github.afanas10101111.dfl.dto.DishTo;
+import com.github.afanas10101111.dfl.dto.ErrorTo;
 import com.github.afanas10101111.dfl.dto.RestaurantTo;
 import com.github.afanas10101111.dfl.exception.NotFoundException;
 import com.github.afanas10101111.dfl.model.Restaurant;
@@ -15,10 +15,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
-import static com.github.afanas10101111.dfl.ErrorTestUtil.restaurantBeanPropertyBindingResultErrorTo;
 import static com.github.afanas10101111.dfl.ErrorTestUtil.methodArgumentNotValidExceptionErrorTo;
-import static com.github.afanas10101111.dfl.RestaurantTestUtil.MC_DONALDS_ID;
+import static com.github.afanas10101111.dfl.ErrorTestUtil.restaurantBeanPropertyBindingResultErrorTo;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.DISH_MATCHER;
+import static com.github.afanas10101111.dfl.RestaurantTestUtil.MC_DONALDS_ID;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.RESTAURANT_MATCHER;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.RESTAURANT_TO_MATCHER;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.RESTAURANT_TO_WITH_DISHES_MATCHER;
@@ -26,14 +26,11 @@ import static com.github.afanas10101111.dfl.RestaurantTestUtil.aaNewPie;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.abNewPie;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.allTos;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.allTosWithActualMenu;
-import static com.github.afanas10101111.dfl.RestaurantTestUtil.bigMak;
-import static com.github.afanas10101111.dfl.RestaurantTestUtil.cheeseburger;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.getDishTo;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.getNew;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.getTo;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.getToWithDishes;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.getUpdated;
-import static com.github.afanas10101111.dfl.RestaurantTestUtil.hamburger;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.mcDonalds;
 import static com.github.afanas10101111.dfl.UserTestUtil.admin;
 import static com.github.afanas10101111.dfl.UserTestUtil.user;
@@ -69,7 +66,7 @@ class RestaurantControllerTest extends BaseWebTestClass {
     @Test
     void updateDishes() throws Exception {
         performPut(URL + SLASH + MC_DONALDS_ID + DISHES_SUFFIX, (List.of(getDishTo(aaNewPie), getDishTo(abNewPie))));
-        DISH_MATCHER.assertMatch(restaurantService.getWithDishes(MC_DONALDS_ID).getDishes(), aaNewPie, abNewPie, bigMak, cheeseburger, hamburger);
+        DISH_MATCHER.assertMatch(restaurantService.getWithDishes(MC_DONALDS_ID).getDishes(), aaNewPie, abNewPie);
     }
 
     @Test

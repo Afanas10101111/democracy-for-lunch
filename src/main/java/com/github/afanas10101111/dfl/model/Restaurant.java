@@ -18,6 +18,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
@@ -54,8 +55,11 @@ public class Restaurant extends NamedEntity {
         this.dishes.forEach(m -> m.setRestaurant(this));
     }
 
-    public void addDishes(Collection<Dish> dishes) {
-        dishes.forEach(m -> m.setRestaurant(this));
+    public void setDishesForDate(Collection<Dish> dishes, LocalDate servingDate) {
+        dishes.forEach(d -> {
+            d.setRestaurant(this);
+            d.setServingDate(servingDate);
+        });
         this.dishes.addAll(dishes);
     }
 
