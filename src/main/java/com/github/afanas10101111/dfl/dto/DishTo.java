@@ -15,20 +15,20 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MealTo {
+public class DishTo {
 
     @NotBlank
     @Size(min = 2, max = 100)
     private String name;
 
-    @Range(min = 100, max = 10000000)
+    @Range(min = 1, max = 10000000)
     private int price;
 
     @Data
-    public static class ValidList implements List<MealTo> {
+    public static class ValidList implements List<DishTo> {
 
         @Valid
         @Delegate
-        private List<MealTo> list = new ArrayList<>();
+        private List<DishTo> list = new ArrayList<>();
     }
 }

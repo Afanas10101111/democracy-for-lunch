@@ -1,8 +1,8 @@
 package com.github.afanas10101111.dfl.web.restaurant;
 
-import com.github.afanas10101111.dfl.dto.MealTo;
+import com.github.afanas10101111.dfl.dto.DishTo;
 import com.github.afanas10101111.dfl.dto.RestaurantTo;
-import com.github.afanas10101111.dfl.model.Meal;
+import com.github.afanas10101111.dfl.model.Dish;
 import com.github.afanas10101111.dfl.model.Restaurant;
 import com.github.afanas10101111.dfl.service.RestaurantService;
 import com.github.afanas10101111.dfl.util.ValidationUtil;
@@ -35,8 +35,8 @@ import static com.github.afanas10101111.dfl.util.ControllerUtil.getUriOfNewResou
 @RequestMapping(value = RestaurantController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestaurantController {
     public static final String URL = "/v1/restaurants";
-    public static final String MEALS_SUFFIX = "/meals";
-    public static final String WITH_MEALS_SUFFIX = "/with-meals";
+    public static final String DISHES_SUFFIX = "/dishes";
+    public static final String WITH_DISHES_SUFFIX = "/with-dishes";
     public static final String UP_TO_DATE_SUFFIX = "/up-to-date";
 
     private final RestaurantService service;
@@ -63,12 +63,12 @@ public class RestaurantController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping(value = "/{id}" + MEALS_SUFFIX, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}" + DISHES_SUFFIX, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateMeals(@PathVariable long id, @Valid @RequestBody MealTo.ValidList mealTos) {
-        log.info("updateMeals (quantity = {}) for restaurant with id = {}", mealTos.size(), id);
-        service.updateMeals(id, mealTos.stream()
-                .map(m -> mapper.map(m, Meal.class))
+    public void updateDishes(@PathVariable long id, @Valid @RequestBody DishTo.ValidList dishTos) {
+        log.info("updateMeals (quantity = {}) for restaurant with id = {}", dishTos.size(), id);
+        service.updateDishes(id, dishTos.stream()
+                .map(m -> mapper.map(m, Dish.class))
                 .collect(Collectors.toList()));
     }
 
@@ -92,10 +92,10 @@ public class RestaurantController {
         return getTo(service.get(id));
     }
 
-    @GetMapping(WITH_MEALS_SUFFIX + "/{id}")
-    public RestaurantTo getWithMeals(@PathVariable long id) {
+    @GetMapping(WITH_DISHES_SUFFIX + "/{id}")
+    public RestaurantTo getWithDishes(@PathVariable long id) {
         log.info("getWithMeals with id = {}", id);
-        return getToWithMeals(service.getWithMeals(id));
+        return getToWithDishes(service.getWithDishes(id));
     }
 
     @GetMapping(UP_TO_DATE_SUFFIX)
@@ -104,30 +104,30 @@ public class RestaurantController {
         return getTos(service.getAllUpToDate());
     }
 
-    @GetMapping(WITH_MEALS_SUFFIX)
-    public List<RestaurantTo> getAllWithMealsUpToDate() {
+    @GetMapping(WITH_DISHES_SUFFIX)
+    public List<RestaurantTo> getAllWithDishesUpToDate() {
         log.info("getAllWithMealsByDate");
-        return getTosWithMeals(service.getAllWithMealsUpToDate());
+        return getTosWithDishes(service.getAllWithDishesUpToDate());
     }
 
     private Restaurant getFromTo(RestaurantTo to) {
         return mapper.map(to, Restaurant.class);
     }
 
-    private RestaurantTo getToWithMeals(Restaurant restaurant) {
+    private RestaurantTo getToWithDishes(Restaurant restaurant) {
         return mapper.map(restaurant, RestaurantTo.class);
     }
 
-    private List<RestaurantTo> getTosWithMeals(List<Restaurant> restaurants) {
+    private List<RestaurantTo> getTosWithDishes(List<Restaurant> restaurants) {
         return restaurants.stream()
-                .map(this::getToWithMeals)
+                .map(this::getToWithDishes)
                 .collect(Collectors.toList());
     }
 
     private RestaurantTo getTo(Restaurant restaurant) {
-        restaurant.setMeals(null);
-        RestaurantTo to = getToWithMeals(restaurant);
-        to.setMeals(null);
+        restaurant.setDishes(null);
+        RestaurantTo to = getToWithDishes(restaurant);
+        to.setDishes(null);
         return to;
     }
 

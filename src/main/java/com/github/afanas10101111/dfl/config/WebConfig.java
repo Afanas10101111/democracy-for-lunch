@@ -7,9 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.github.afanas10101111.dfl.dto.RestaurantTo;
 import com.github.afanas10101111.dfl.dto.UserTo;
-import com.github.afanas10101111.dfl.model.Restaurant;
 import com.github.afanas10101111.dfl.model.User;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
@@ -65,12 +63,6 @@ public class WebConfig implements WebMvcConfigurer {
             @Override
             protected void configure() {
                 skip(destination.getRegistered());
-            }
-        });
-        mapper.addMappings(new PropertyMap<RestaurantTo, Restaurant>() {
-            @Override
-            protected void configure() {
-                skip(destination.getVoices());
             }
         });
         return mapper;

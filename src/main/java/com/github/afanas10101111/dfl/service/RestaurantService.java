@@ -1,6 +1,6 @@
 package com.github.afanas10101111.dfl.service;
 
-import com.github.afanas10101111.dfl.model.Meal;
+import com.github.afanas10101111.dfl.model.Dish;
 import com.github.afanas10101111.dfl.model.Restaurant;
 import com.github.afanas10101111.dfl.repository.RestaurantRepository;
 import com.github.afanas10101111.dfl.util.ValidationUtil;
@@ -35,11 +35,11 @@ public class RestaurantService {
     }
 
     @Transactional
-    public void updateMeals(long id, Collection<Meal> meals) {
-        Assert.notNull(meals, ASSERT_MESSAGE);
+    public void updateDishes(long id, Collection<Dish> dishes) {
+        Assert.notNull(dishes, ASSERT_MESSAGE);
+        repository.deleteDishByServingDate(LocalDate.now());
         Restaurant restaurantFromDb = get(id);
-        restaurantFromDb.setVoices(0);
-        restaurantFromDb.addMeals(meals);
+        restaurantFromDb.setDishesForDate(dishes, LocalDate.now());
     }
 
     public void delete(long id) {
@@ -50,8 +50,8 @@ public class RestaurantService {
         return ValidationUtil.checkNotFoundWithId(repository.get(id), id);
     }
 
-    public Restaurant getWithMeals(long id) {
-        return ValidationUtil.checkNotFoundWithId(repository.getWithMealsByDate(id, LocalDate.now()), id);
+    public Restaurant getWithDishes(long id) {
+        return ValidationUtil.checkNotFoundWithId(repository.getWithDishesByDate(id, LocalDate.now()), id);
     }
 
     public List<Restaurant> getAll() {
@@ -62,7 +62,7 @@ public class RestaurantService {
         return repository.getAllUpToDate(LocalDate.now());
     }
 
-    public List<Restaurant> getAllWithMealsUpToDate() {
-        return repository.getAllWithMealsByDate(LocalDate.now());
+    public List<Restaurant> getAllWithDishesUpToDate() {
+        return repository.getAllWithDishesByDate(LocalDate.now());
     }
 }

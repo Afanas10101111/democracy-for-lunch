@@ -3,6 +3,11 @@ package com.github.afanas10101111.dfl.service;
 import com.github.afanas10101111.dfl.exception.TooLateToRevoteException;
 import com.github.afanas10101111.dfl.model.Restaurant;
 import com.github.afanas10101111.dfl.model.User;
+import com.github.afanas10101111.dfl.model.Voice;
+import com.github.afanas10101111.dfl.repository.RestaurantRepository;
+import com.github.afanas10101111.dfl.repository.UserRepository;
+import com.github.afanas10101111.dfl.repository.VoiceRepository;
+import com.github.afanas10101111.dfl.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,37 +16,35 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Objects;
 
 @RequiredArgsConstructor
 @Service
 public class VoteService {
-    public static final LocalTime REVOTE_CLOSING_TIME = LocalTime.of(10, 59);
-    private final UserService userService;
-    private final RestaurantService restaurantService;
+    public static final LocalTime REVOTE_CLOSING_TIME = LocalTime.of(10, 59, 59);
+
+    private final VoiceRepository voiceRepository;
+    private final UserRepository userRepository;
+    private final RestaurantRepository restaurantRepository;
     private final Clock clock;
 
     @Transactional
     public void vote(long userId, long restaurantId) {
+        User user = ValidationUtil.checkNotFoundWithId(userRepository.get(userId), userId);
+        Restaurant restaurant = ValidationUtil.checkNotFoundWithId(restaurantRepository.get(restaurantId), restaurantId);
+
         LocalDateTime now = LocalDateTime.now(clock);
-        LocalDate nowDate = now.toLocalDate();
-
-        User user = userService.get(userId);
-        boolean votedToday = Objects.equals(user.getVoteDate(), nowDate);
-        boolean sameChoice = Objects.equals(user.getVotedForId(), restaurantId);
-        if (votedToday && now.toLocalTime().isAfter(REVOTE_CLOSING_TIME)) {
+        Voice voice = voiceRepository.getByUser(now.toLocalDate(), user);
+        if (voice == null) {
+            voiceRepository.save(new Voice(now.toLocalDate(), user, restaurant));
+        } else if (now.toLocalTime().isAfter(REVOTE_CLOSING_TIME)) {
             throw new TooLateToRevoteException();
-        } else if (votedToday && sameChoice) {
-            return;
+        } else if (!voice.getRestaurant().equals(restaurant)) {
+            voice.setRestaurant(restaurant);
         }
+    }
 
-        Restaurant restaurant = restaurantService.get(restaurantId);
-        if (!sameChoice && votedToday) {
-            Restaurant previousChoice = restaurantService.get(user.getVotedForId());
-            previousChoice.removeVoice();
-        }
-        restaurant.addVoice();
-        user.setVotedForId(restaurantId);
-        user.setVoteDate(nowDate);
+    public int getVoicesCount(long restaurantId) {
+        Restaurant restaurant = ValidationUtil.checkNotFoundWithId(restaurantRepository.get(restaurantId), restaurantId);
+        return voiceRepository.getAllByDateAndRestaurant(LocalDate.now(clock), restaurant).size();
     }
 }

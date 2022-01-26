@@ -13,33 +13,38 @@ import java.util.List;
 public class RestaurantRepository {
     private static final Sort SORT_NAME_ADDRESS = Sort.by(Sort.Direction.ASC, "name", "address");
 
-    private final DataJpaRestaurantRepository repository;
+    private final DataJpaRestaurantRepository rRepository;
+    private final DataJpaDishRepository dRepository;
 
     public Restaurant save(Restaurant restaurant) {
-        return repository.save(restaurant);
+        return rRepository.save(restaurant);
     }
 
     public boolean delete(long id) {
-        return repository.delete(id) != 0;
+        return rRepository.delete(id) != 0;
     }
 
     public Restaurant get(long id) {
-        return repository.findById(id).orElse(null);
+        return rRepository.findById(id).orElse(null);
     }
 
-    public Restaurant getWithMealsByDate(long id, LocalDate date) {
-        return repository.getWithMealsByDate(id, date);
+    public Restaurant getWithDishesByDate(long id, LocalDate date) {
+        return rRepository.getWithDishesByDate(id, date);
     }
 
     public List<Restaurant> getAll() {
-        return repository.findAll(SORT_NAME_ADDRESS);
+        return rRepository.findAll(SORT_NAME_ADDRESS);
     }
 
     public List<Restaurant> getAllUpToDate(LocalDate date) {
-        return repository.getAllUpToDate(date);
+        return rRepository.getAllUpToDate(date);
     }
 
-    public List<Restaurant> getAllWithMealsByDate(LocalDate date) {
-        return repository.getAllWithMealsByDate(date);
+    public List<Restaurant> getAllWithDishesByDate(LocalDate date) {
+        return rRepository.getAllWithDishesByDate(date);
+    }
+
+    public void deleteDishByServingDate(LocalDate servingDate) {
+        dRepository.deleteByServingDate(servingDate);
     }
 }

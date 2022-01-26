@@ -23,7 +23,5 @@ public class RestaurantTo {
     @Size(min = 2, max = 100)
     private String address;
 
-    private Integer voices;
-
-    private Set<@Valid MealTo> meals;
+    private Set<@Valid DishTo> dishes;
 }

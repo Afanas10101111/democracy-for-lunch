@@ -13,13 +13,13 @@ VALUES ('USER', 100000),
        ('ADMIN', 100000),
        ('USER', 100001);
 
-INSERT INTO restaurants (name, address, voices)
-VALUES ('McDonalds', 'Moscow', 0),
-       ('BurgerKing', 'Moscow', 0),
-       ('KFC', 'Moscow', 0),
-       ('SubWay', 'Москва', 0);
+INSERT INTO restaurants (name, address)
+VALUES ('McDonalds', 'Moscow'),
+       ('BurgerKing', 'Moscow'),
+       ('KFC', 'Moscow'),
+       ('SubWay', 'Москва');
 
-INSERT INTO meals (restaurant_id, name, price, created)
+INSERT INTO dishes (restaurant_id, name, price, serving_date)
 VALUES (100002, 'hamburger', 5000, now()),
        (100002, 'cheeseburger', 6000, now()),
        (100002, 'big mak', 16000, now()),

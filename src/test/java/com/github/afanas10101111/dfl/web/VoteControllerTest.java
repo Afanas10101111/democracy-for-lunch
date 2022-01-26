@@ -5,7 +5,6 @@ import com.github.afanas10101111.dfl.ClockMockConfig;
 import com.github.afanas10101111.dfl.JsonTestUtil;
 import com.github.afanas10101111.dfl.UserTestUtil;
 import com.github.afanas10101111.dfl.dto.ErrorTo;
-import com.github.afanas10101111.dfl.model.User;
 import com.github.afanas10101111.dfl.service.VoteService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.Clock;
-import java.time.LocalDate;
 
 import static com.github.afanas10101111.dfl.ErrorTestUtil.CORRECT_TIME;
 import static com.github.afanas10101111.dfl.ErrorTestUtil.INCORRECT_TIME;
@@ -42,6 +40,7 @@ class VoteControllerTest extends BaseWebTestClass {
     @Test
     void vote() throws Exception {
         setClock(clock, CORRECT_TIME);
+        assertThat(service.getVoicesCount(MC_DONALDS_ID)).isZero();
         mockMvc.perform(
                 MockMvcRequestBuilders.patch(URL)
                         .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail(), user.getPassword()))
@@ -49,11 +48,7 @@ class VoteControllerTest extends BaseWebTestClass {
         )
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertThat(restaurantService.get(MC_DONALDS_ID).getVoices()).isEqualTo(1);
-
-        User user = userService.get(USER_ID);
-        assertThat(user.getVotedForId()).isEqualTo(MC_DONALDS_ID);
-        assertThat(user.getVoteDate()).isEqualTo(LocalDate.now());
+        assertThat(service.getVoicesCount(MC_DONALDS_ID)).isEqualTo(1);
     }
 
     @Test
