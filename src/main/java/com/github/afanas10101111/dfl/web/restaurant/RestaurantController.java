@@ -49,7 +49,7 @@ public class RestaurantController {
         Restaurant newFromTo = getFromTo(restaurantTo);
         ValidationUtil.checkNew(newFromTo);
         Restaurant created = service.create(newFromTo);
-        return ResponseEntity.created(getUriOfNewResource(created)).body(getTo(created));
+        return ResponseEntity.created(getUriOfNewResource(URL, created)).body(getTo(created));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -92,7 +92,7 @@ public class RestaurantController {
         return getTo(service.get(id));
     }
 
-    @GetMapping(WITH_DISHES_SUFFIX + "/{id}")
+    @GetMapping("/{id}" + WITH_DISHES_SUFFIX)
     public RestaurantTo getWithDishes(@PathVariable long id) {
         log.info("getWithMeals with id = {}", id);
         return getToWithDishes(service.getWithDishes(id));

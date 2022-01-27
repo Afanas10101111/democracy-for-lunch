@@ -57,6 +57,6 @@ public class ProfileController extends BaseUserController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<UserTo> register(@Valid @RequestBody UserTo userTo) {
         log.info("register (mail = {})", userTo.getEmail());
-        return super.createWithLocation(userTo);
+        return super.createWithLocation(URL, userTo);
     }
 }

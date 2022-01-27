@@ -33,19 +33,12 @@ class RestaurantServiceTest extends BaseServiceTestClass {
     void createAndGetWithDishesByDate() {
         Restaurant created = service.create(getNew());
         long createdId = created.id();
-        long createdMealId = created.getDishes().stream()
-                .findFirst()
-                .orElseThrow()
-                .id();
         Restaurant expected = getNew();
         expected.setId(createdId);
-        expected.getDishes().stream()
-                .findFirst()
-                .orElseThrow()
-                .setId(createdMealId);
+        expected.setDishes(null);
         RESTAURANT_WITH_DISHES_MATCHER.assertMatch(created, expected);
         RESTAURANT_MATCHER.assertMatch(service.get(createdId), expected);
-        RESTAURANT_WITH_DISHES_MATCHER.assertMatch(service.getWithDishes(createdId), expected);
+        assertThrows(NotFoundException.class, () -> service.getWithDishes(createdId));
     }
 
     @Test

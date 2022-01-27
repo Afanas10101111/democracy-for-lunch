@@ -9,9 +9,9 @@ import java.net.URI;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ControllerUtil {
-    public static <T extends BaseEntity> URI getUriOfNewResource(T created) {
+    public static <T extends BaseEntity> URI getUriOfNewResource(String url, T created) {
         return ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/{id}")
+                .path(url + "/{id}")
                 .buildAndExpand(created.getId())
                 .toUri();
     }

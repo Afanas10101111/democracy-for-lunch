@@ -22,6 +22,7 @@ public class RestaurantService {
 
     public Restaurant create(Restaurant restaurant) {
         Assert.notNull(restaurant, ASSERT_MESSAGE);
+        restaurant.setDishes(null);
         return repository.save(restaurant);
     }
 

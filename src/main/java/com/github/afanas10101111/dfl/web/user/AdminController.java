@@ -28,12 +28,11 @@ import java.util.stream.Collectors;
 public class AdminController extends BaseUserController {
     public static final String URL = "/v1/admin/users";
 
-    @Override
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<UserTo> createWithLocation(@Valid @RequestBody UserTo userTo) {
         log.info("createWithLocation (mail = {})", userTo.getEmail());
-        return super.createWithLocation(userTo);
+        return super.createWithLocation(URL, userTo);
     }
 
     @Override
