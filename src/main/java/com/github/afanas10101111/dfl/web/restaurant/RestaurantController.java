@@ -12,7 +12,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,7 +41,6 @@ public class RestaurantController {
     private final RestaurantService service;
     private final ModelMapper mapper;
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestaurantTo> createWithLocation(@Valid @RequestBody RestaurantTo restaurantTo) {
         log.info("createWithLocation (name = {})", restaurantTo.getName());
@@ -52,7 +50,6 @@ public class RestaurantController {
         return ResponseEntity.created(getUriOfNewResource(URL, created)).body(getTo(created));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@PathVariable long id, @Valid @RequestBody RestaurantTo restaurantTo) {
@@ -62,7 +59,6 @@ public class RestaurantController {
         service.update(updatedFromTo);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/{id}" + DISHES_SUFFIX, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateDishes(@PathVariable long id, @Valid @RequestBody DishTo.ValidList dishTos) {
@@ -72,7 +68,6 @@ public class RestaurantController {
                 .collect(Collectors.toList()));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable long id) {

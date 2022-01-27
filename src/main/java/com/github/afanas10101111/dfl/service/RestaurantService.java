@@ -38,8 +38,8 @@ public class RestaurantService {
     @Transactional
     public void updateDishes(long id, Collection<Dish> dishes) {
         Assert.notNull(dishes, ASSERT_MESSAGE);
-        repository.deleteDishByServingDate(LocalDate.now());
         Restaurant restaurantFromDb = get(id);
+        repository.deleteDishByServingDate(restaurantFromDb, LocalDate.now());
         restaurantFromDb.setDishesForDate(dishes, LocalDate.now());
     }
 

@@ -14,7 +14,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import static com.github.afanas10101111.dfl.ErrorTestUtil.accessDeniedExceptionErrorTo;
 import static com.github.afanas10101111.dfl.ErrorTestUtil.illegalArgumentExceptionErrorTo;
 import static com.github.afanas10101111.dfl.ErrorTestUtil.notFoundExceptionErrorTo;
 import static com.github.afanas10101111.dfl.ErrorTestUtil.userBeanPropertyBindingResultErrorTo;
@@ -141,14 +140,11 @@ class AdminControllerTest extends BaseWebTestClass {
 
     @Test
     void handleAccessDeniedException() throws Exception {
-        MvcResult result = mockMvc.perform(
+        mockMvc.perform(
                 MockMvcRequestBuilders.get(URL)
                         .with(SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail(), user.getPassword()))
         )
                 .andDo(print())
-                .andExpect(status().isForbidden())
-                .andReturn();
-        ErrorTo errorTo = JsonTestUtil.readValue(mapper, result, ErrorTo.class);
-        assertEquals(accessDeniedExceptionErrorTo, errorTo);
+                .andExpect(status().isForbidden());
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.github.afanas10101111.dfl.RestaurantTestUtil.BURGER_KING_ID;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.NOW;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.MC_DONALDS_ID;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.NA_ID;
@@ -21,6 +22,7 @@ import static com.github.afanas10101111.dfl.RestaurantTestUtil.getNew;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.getUpdated;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.hamburger;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.mcDonalds;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -102,5 +104,14 @@ class RestaurantRepositoryTest extends BaseTestClass {
     @Test
     void getAllWithDishesByDate() {
         RESTAURANT_WITH_DISHES_MATCHER.assertMatch(repository.getAllWithDishesByDate(NOW), allWithActualMenu);
+    }
+
+    @Test
+    void deleteDishByServingDate() {
+        assertEquals(3, repository.getWithDishesByDate(MC_DONALDS_ID, LocalDate.now()).getDishes().size());
+        assertEquals(2, repository.getWithDishesByDate(BURGER_KING_ID, LocalDate.now()).getDishes().size());
+        repository.deleteDishByServingDate(mcDonalds, LocalDate.now());
+        assertNull(repository.getWithDishesByDate(MC_DONALDS_ID, LocalDate.now()));
+        assertEquals(2, repository.getWithDishesByDate(BURGER_KING_ID, LocalDate.now()).getDishes().size());
     }
 }

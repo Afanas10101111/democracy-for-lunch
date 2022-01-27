@@ -44,7 +44,7 @@ public class RestaurantRepository {
         return rRepository.getAllWithDishesByDate(date);
     }
 
-    public void deleteDishByServingDate(LocalDate servingDate) {
-        dRepository.deleteByServingDate(servingDate);
+    public void deleteDishByServingDate(Restaurant restaurant, LocalDate servingDate) {
+        dRepository.deleteByServingDate(restaurant, servingDate);
     }
 }
