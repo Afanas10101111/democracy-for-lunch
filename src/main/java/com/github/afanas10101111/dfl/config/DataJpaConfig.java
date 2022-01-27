@@ -138,11 +138,11 @@ public class DataJpaConfig {
     }
 
     @Bean
-    JCacheManagerFactoryBean jCacheManagerFactoryBean() throws IOException {
+    CacheManager jCacheManagerFactoryBean() throws IOException {
         JCacheManagerFactoryBean factory = new JCacheManagerFactoryBean();
         factory.setCacheManagerUri(new ClassPathResource(springCacheConfigLocation).getURI());
         factory.afterPropertiesSet();
-        return factory;
+        return factory.getObject();
     }
 
     @Bean
