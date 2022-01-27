@@ -11,9 +11,9 @@ import java.util.stream.Collectors;
 
 public class RestaurantTestUtil {
     public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_MATCHER = MatcherFactory.createWithFieldsToIgnore("dishes");
-    public static final MatcherFactory.Matcher<RestaurantTo> RESTAURANT_TO_MATCHER = MatcherFactory.createWithFieldsToIgnore("dishes");
+    public static final MatcherFactory.Matcher<RestaurantTo> RESTAURANT_TO_MATCHER = MatcherFactory.createWithFieldsToIgnore("dishes", "voices");
     public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_WITH_DISHES_MATCHER = MatcherFactory.createWithFieldsToIgnore("dishes.date", "dishes.restaurant");
-    public static final MatcherFactory.Matcher<RestaurantTo> RESTAURANT_TO_WITH_DISHES_MATCHER = MatcherFactory.createWithFieldsToIgnore("");
+    public static final MatcherFactory.Matcher<RestaurantTo> RESTAURANT_TO_WITH_DISHES_MATCHER = MatcherFactory.createWithFieldsToIgnore("voices");
     public static final MatcherFactory.Matcher<Dish> DISH_MATCHER = MatcherFactory.createWithFieldsToIgnore("date", "restaurant");
 
     public static final LocalDate NOW = LocalDate.now();
@@ -100,6 +100,7 @@ public class RestaurantTestUtil {
                 restaurant.id(),
                 restaurant.getName(),
                 restaurant.getAddress(),
+                null,
                 restaurant.getDishes().stream()
                         .map(RestaurantTestUtil::getDishTo)
                         .collect(Collectors.toSet())
@@ -111,6 +112,7 @@ public class RestaurantTestUtil {
                 restaurant.getId(),
                 restaurant.getName(),
                 restaurant.getAddress(),
+                null,
                 null
         );
     }

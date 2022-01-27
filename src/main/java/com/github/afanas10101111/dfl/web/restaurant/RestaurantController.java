@@ -5,6 +5,7 @@ import com.github.afanas10101111.dfl.dto.RestaurantTo;
 import com.github.afanas10101111.dfl.model.Dish;
 import com.github.afanas10101111.dfl.model.Restaurant;
 import com.github.afanas10101111.dfl.service.RestaurantService;
+import com.github.afanas10101111.dfl.service.VoteService;
 import com.github.afanas10101111.dfl.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +39,8 @@ public class RestaurantController {
     public static final String WITH_DISHES_SUFFIX = "/with-dishes";
     public static final String UP_TO_DATE_SUFFIX = "/up-to-date";
 
-    private final RestaurantService service;
+    private final RestaurantService rService;
+    private final VoteService vService;
     private final ModelMapper mapper;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -46,8 +48,8 @@ public class RestaurantController {
         log.info("createWithLocation (name = {})", restaurantTo.getName());
         Restaurant newFromTo = getFromTo(restaurantTo);
         ValidationUtil.checkNew(newFromTo);
-        Restaurant created = service.create(newFromTo);
-        return ResponseEntity.created(getUriOfNewResource(URL, created)).body(getTo(created));
+        Restaurant created = rService.create(newFromTo);
+        return ResponseEntity.created(getUriOfNewResource(URL, created)).body(getTo(created, false));
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -56,14 +58,14 @@ public class RestaurantController {
         log.info("update with id = {}, set {}", id, restaurantTo);
         Restaurant updatedFromTo = getFromTo(restaurantTo);
         ValidationUtil.checkIdConsistent(id, updatedFromTo);
-        service.update(updatedFromTo);
+        rService.update(updatedFromTo);
     }
 
     @PutMapping(value = "/{id}" + DISHES_SUFFIX, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateDishes(@PathVariable long id, @Valid @RequestBody DishTo.ValidList dishTos) {
         log.info("updateMeals (quantity = {}) for restaurant with id = {}", dishTos.size(), id);
-        service.updateDishes(id, dishTos.stream()
+        rService.updateDishes(id, dishTos.stream()
                 .map(m -> mapper.map(m, Dish.class))
                 .collect(Collectors.toList()));
     }
@@ -72,63 +74,65 @@ public class RestaurantController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable long id) {
         log.info("delete with id = {}", id);
-        service.delete(id);
+        rService.delete(id);
     }
 
     @GetMapping()
     public List<RestaurantTo> getAll() {
         log.info("getAll");
-        return getTos(service.getAll());
+        return getTos(rService.getAll());
     }
 
     @GetMapping("/{id}")
     public RestaurantTo get(@PathVariable long id) {
         log.info("get with id = {}", id);
-        return getTo(service.get(id));
+        return getTo(rService.get(id), true);
     }
 
     @GetMapping("/{id}" + WITH_DISHES_SUFFIX)
     public RestaurantTo getWithDishes(@PathVariable long id) {
         log.info("getWithMeals with id = {}", id);
-        return getToWithDishes(service.getWithDishes(id));
+        return getToWithDishes(rService.getWithDishes(id), true);
     }
 
     @GetMapping(UP_TO_DATE_SUFFIX)
     public List<RestaurantTo> getAllUpToDate() {
         log.info("getAllUpToDate");
-        return getTos(service.getAllUpToDate());
+        return getTos(rService.getAllUpToDate());
     }
 
     @GetMapping(WITH_DISHES_SUFFIX)
     public List<RestaurantTo> getAllWithDishesUpToDate() {
         log.info("getAllWithMealsByDate");
-        return getTosWithDishes(service.getAllWithDishesUpToDate());
+        return getTosWithDishes(rService.getAllWithDishesUpToDate());
     }
 
     private Restaurant getFromTo(RestaurantTo to) {
         return mapper.map(to, Restaurant.class);
     }
 
-    private RestaurantTo getToWithDishes(Restaurant restaurant) {
-        return mapper.map(restaurant, RestaurantTo.class);
+    private RestaurantTo getToWithDishes(Restaurant restaurant, boolean withVoices) {
+        RestaurantTo to = mapper.map(restaurant, RestaurantTo.class);
+        to.setVoices(withVoices ? vService.getVoicesCount(restaurant.id()) : null);
+        return to;
     }
 
     private List<RestaurantTo> getTosWithDishes(List<Restaurant> restaurants) {
         return restaurants.stream()
-                .map(this::getToWithDishes)
+                .map(r -> getToWithDishes(r, false))
                 .collect(Collectors.toList());
     }
 
-    private RestaurantTo getTo(Restaurant restaurant) {
+    private RestaurantTo getTo(Restaurant restaurant, boolean withVoices) {
         restaurant.setDishes(null);
-        RestaurantTo to = getToWithDishes(restaurant);
+        RestaurantTo to = getToWithDishes(restaurant, withVoices);
         to.setDishes(null);
         return to;
     }
 
     private List<RestaurantTo> getTos(List<Restaurant> restaurants) {
         return restaurants.stream()
-                .map(this::getTo)
+                .map(r -> getTo(r, false))
                 .collect(Collectors.toList());
     }
 }

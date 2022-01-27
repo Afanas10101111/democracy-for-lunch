@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Repository
@@ -22,7 +21,7 @@ public class VoiceRepository {
         return repository.getByDateAndUser(date, user);
     }
 
-    public List<Voice> getAllByDateAndRestaurant(LocalDate date, Restaurant restaurant) {
-        return repository.getAllByDateAndRestaurant(date, restaurant);
+    public int getVoicesCountByDateAndRestaurant(LocalDate date, Restaurant restaurant) {
+        return repository.getVoicesCountByDateAndRestaurant(date, restaurant);
     }
 }
