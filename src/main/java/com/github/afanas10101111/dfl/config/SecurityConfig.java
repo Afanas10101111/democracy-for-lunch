@@ -3,6 +3,7 @@ package com.github.afanas10101111.dfl.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,6 +20,11 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder(12);
+    public static final String ADMIN_ROLE = "ADMIN";
+    public static final String REGISTER_URL = "/v1/profile/register";
+    public static final String ADMIN_URL = "/v1/admin/**";
+    public static final String RESTAURANTS_ADMIN_URL = "/v1/restaurants/**";
+    public static final String OTHER_URLS = "/v1/**";
 
     private final UserDetailsService userDetailsService;
 
@@ -31,8 +37,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/v1/profile/register").anonymous()
-                .antMatchers("/v1/**").authenticated()
+                .antMatchers(REGISTER_URL).anonymous()
+                .antMatchers(ADMIN_URL).hasRole(ADMIN_ROLE)
+                .antMatchers(HttpMethod.POST, RESTAURANTS_ADMIN_URL).hasRole(ADMIN_ROLE)
+                .antMatchers(HttpMethod.PUT, RESTAURANTS_ADMIN_URL).hasRole(ADMIN_ROLE)
+                .antMatchers(HttpMethod.DELETE, RESTAURANTS_ADMIN_URL).hasRole(ADMIN_ROLE)
+                .antMatchers(OTHER_URLS).authenticated()
                 .antMatchers(
                         "/v2/api-docs/**",
                         "/swagger-resources/**",

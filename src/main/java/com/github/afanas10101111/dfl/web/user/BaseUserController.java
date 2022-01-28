@@ -20,11 +20,11 @@ abstract class BaseUserController {
     @Autowired
     private ModelMapper mapper;
 
-    public ResponseEntity<UserTo> createWithLocation(UserTo userTo) {
+    public ResponseEntity<UserTo> createWithLocation(String url, UserTo userTo) {
         User newFromTo = getFromTo(userTo);
         ValidationUtil.checkNew(newFromTo);
         User created = service.create(newFromTo);
-        return ResponseEntity.created(getUriOfNewResource(created)).body(getTo(created));
+        return ResponseEntity.created(getUriOfNewResource(url, created)).body(getTo(created));
     }
 
     public void update(long id, UserTo userTo) {

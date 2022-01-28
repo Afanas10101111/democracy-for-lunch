@@ -45,6 +45,6 @@ public class VoteService {
 
     public int getVoicesCount(long restaurantId) {
         Restaurant restaurant = ValidationUtil.checkNotFoundWithId(restaurantRepository.get(restaurantId), restaurantId);
-        return voiceRepository.getAllByDateAndRestaurant(LocalDate.now(clock), restaurant).size();
+        return voiceRepository.getVoicesCountByDateAndRestaurant(LocalDate.now(clock), restaurant);
     }
 }

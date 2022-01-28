@@ -1,5 +1,12 @@
 <config xmlns='http://www.ehcache.org/v3'>
 
+    <cache-template name="multipleExpiringCache">
+        <expiry>
+            <ttl unit="minutes">10</ttl>
+        </expiry>
+        <heap>1000</heap>
+    </cache-template>
+
     <cache-template name="singleNonExpiringCache">
         <expiry>
             <none/>
@@ -7,6 +14,10 @@
         <heap>1</heap>
     </cache-template>
 
-    <cache alias="users" uses-template="singleNonExpiringCache"/>
+    <cache alias="restaurant-with-dishes" uses-template="multipleExpiringCache"/>
+
+    <cache alias="restaurants" uses-template="singleNonExpiringCache"/>
+    <cache alias="actual-restaurants" uses-template="singleNonExpiringCache"/>
+    <cache alias="actual-restaurants-with-dishes" uses-template="singleNonExpiringCache"/>
 
 </config>

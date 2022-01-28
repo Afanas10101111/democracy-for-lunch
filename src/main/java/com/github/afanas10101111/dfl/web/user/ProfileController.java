@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +26,6 @@ public class ProfileController extends BaseUserController {
     public static final String URL = "/v1/profile";
     public static final String REG = "/register";
 
-    @PreAuthorize("hasRole('USER')")
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@ApiIgnore @AuthenticationPrincipal AuthorizedUser authUser, @Valid @RequestBody UserTo userTo) {
@@ -36,7 +34,6 @@ public class ProfileController extends BaseUserController {
         super.update(id, userTo);
     }
 
-    @PreAuthorize("hasRole('USER')")
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@ApiIgnore @AuthenticationPrincipal AuthorizedUser authUser) {
@@ -45,7 +42,6 @@ public class ProfileController extends BaseUserController {
         super.delete(id);
     }
 
-    @PreAuthorize("hasRole('USER')")
     @GetMapping
     public UserTo get(@ApiIgnore @AuthenticationPrincipal AuthorizedUser authUser) {
         long id = authUser.getId();
@@ -57,6 +53,6 @@ public class ProfileController extends BaseUserController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<UserTo> register(@Valid @RequestBody UserTo userTo) {
         log.info("register (mail = {})", userTo.getEmail());
-        return super.createWithLocation(userTo);
+        return super.createWithLocation(URL, userTo);
     }
 }

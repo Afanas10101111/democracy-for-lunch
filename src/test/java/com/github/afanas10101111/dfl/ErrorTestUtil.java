@@ -22,13 +22,11 @@ public class ErrorTestUtil {
     public static final ErrorTo tooLateToVoteExceptionErrorTo
             = new ErrorTo(ErrorTo.ErrorType.VOTING, "Too late to revote! Voting ends at 10:59:59");
     public static final ErrorTo methodArgumentNotValidExceptionErrorTo
-            = new ErrorTo(ErrorTo.ErrorType.BAD_REQUEST, "[dishToList.list[0].price,list[0].price] [must be between 1 and 10000000]");
+            = new ErrorTo(ErrorTo.ErrorType.BAD_REQUEST, "[dishToList.price,price] [must be between 1 and 10000000]");
     public static final ErrorTo restaurantBeanPropertyBindingResultErrorTo
             = new ErrorTo(ErrorTo.ErrorType.BAD_REQUEST, "[restaurantTo.name,name] [size must be between 2 and 100]");
     public static final ErrorTo userBeanPropertyBindingResultErrorTo
             = new ErrorTo(ErrorTo.ErrorType.BAD_REQUEST, "[userTo.enabled,enabled] [must not be null]");
-    public static final ErrorTo accessDeniedExceptionErrorTo
-            = new ErrorTo(ErrorTo.ErrorType.ACCESS, "Access is denied");
     public static final ErrorTo updateRestrictionExceptionErrorTo
             = new ErrorTo(ErrorTo.ErrorType.ACCESS, "Update is restricted for entity with id = 100001");
 

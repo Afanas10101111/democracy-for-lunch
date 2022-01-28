@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.util.CollectionUtils;
@@ -27,6 +29,7 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString(callSuper = true, exclude = "dishes")
+@Cache(region = "restaurant", usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Entity
 @Table(
         name = "restaurants",

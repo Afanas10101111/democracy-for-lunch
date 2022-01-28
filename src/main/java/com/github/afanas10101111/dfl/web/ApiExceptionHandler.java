@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -43,11 +42,6 @@ public class ApiExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorTo> handleHttpMessageNotReadableException(HttpServletRequest req, HttpMessageNotReadableException e) {
         return getErrorResponse(req, e, ErrorTo.ErrorType.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErrorTo> handleAccessDeniedException(HttpServletRequest req, AccessDeniedException e) {
-        return getErrorResponse(req, e, ErrorTo.ErrorType.ACCESS);
     }
 
     @ExceptionHandler(UpdateRestrictionException.class)

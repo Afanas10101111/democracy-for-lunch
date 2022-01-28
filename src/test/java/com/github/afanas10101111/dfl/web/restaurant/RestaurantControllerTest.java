@@ -96,7 +96,7 @@ class RestaurantControllerTest extends BaseWebTestClass {
     @Test
     void getWithDishes() throws Exception {
         RESTAURANT_TO_WITH_DISHES_MATCHER.assertMatch(
-                JsonTestUtil.readValue(mapper, getGetResult(URL + WITH_DISHES_SUFFIX + SLASH + MC_DONALDS_ID), RestaurantTo.class),
+                JsonTestUtil.readValue(mapper, getGetResult(URL + SLASH + MC_DONALDS_ID + WITH_DISHES_SUFFIX), RestaurantTo.class),
                 getToWithDishes(mcDonalds)
         );
     }
