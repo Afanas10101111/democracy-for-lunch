@@ -22,6 +22,7 @@ import static com.github.afanas10101111.dfl.RestaurantTestUtil.getUpdated;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.kfc;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.mcDonalds;
 import static com.github.afanas10101111.dfl.RestaurantTestUtil.subWay;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RestaurantServiceTest extends BaseServiceTestClass {
@@ -99,5 +100,27 @@ class RestaurantServiceTest extends BaseServiceTestClass {
     @Test
     void getAllWithDishesUpToDate() {
         RESTAURANT_WITH_DISHES_MATCHER.assertMatch(service.getAllWithDishesUpToDate(), allWithActualMenu);
+    }
+
+    @Test
+    void cacheEvictionTest() {
+        assertEquals(4, service.getAll().size());
+        assertEquals(3, service.getAllUpToDate().size());
+        assertEquals(3, service.getAllWithDishesUpToDate().size());
+
+        service.create(getNew());
+        assertEquals(5, service.getAll().size());
+        assertEquals(3, service.getAllUpToDate().size());
+        assertEquals(3, service.getAllWithDishesUpToDate().size());
+
+        service.updateDishes(SUB_WAY_ID, getNewDishes());
+        assertEquals(5, service.getAll().size());
+        assertEquals(4, service.getAllUpToDate().size());
+        assertEquals(4, service.getAllWithDishesUpToDate().size());
+
+        service.delete(SUB_WAY_ID);
+        assertEquals(4, service.getAll().size());
+        assertEquals(3, service.getAllUpToDate().size());
+        assertEquals(3, service.getAllWithDishesUpToDate().size());
     }
 }

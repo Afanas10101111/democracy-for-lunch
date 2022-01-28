@@ -43,7 +43,7 @@ public class RestaurantService {
         restaurantFromDb.setAddress(restaurant.getAddress());
     }
 
-    @CacheEvict(cacheNames = {RESTAURANT_WITH_DISHES, ACTUAL_RESTAURANTS_WITH_DISHES}, allEntries = true)
+    @CacheEvict(cacheNames = {RESTAURANT_WITH_DISHES, ACTUAL_RESTAURANTS, ACTUAL_RESTAURANTS_WITH_DISHES}, allEntries = true)
     @Transactional
     public void updateDishes(long id, Collection<Dish> dishes) {
         Assert.notNull(dishes, ASSERT_MESSAGE);
