@@ -63,7 +63,7 @@ public class RestaurantController {
 
     @PutMapping(value = "/{id}" + DISHES_SUFFIX, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateDishes(@PathVariable long id, @Valid @RequestBody DishTo.ValidList dishTos) {
+    public void updateDishes(@PathVariable long id, @Valid @RequestBody List<DishTo> dishTos) {
         log.info("updateMeals (quantity = {}) for restaurant with id = {}", dishTos.size(), id);
         rService.updateDishes(id, dishTos.stream()
                 .map(m -> mapper.map(m, Dish.class))
